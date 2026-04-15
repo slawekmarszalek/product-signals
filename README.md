@@ -1,35 +1,61 @@
-# product-signals
+# Product Signals
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+A lightweight product intelligence dashboard for tracking open-source developer tools using public GitHub signals.
 
-## Built with v0
+## Overview
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+Product Signals aggregates and surfaces key signals from selected OSS repositories. It helps identify trends, compare tools, and monitor ecosystem dynamics.
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_2B6PcmHX1AcAWP5lUGip6WQCi2PG)
+The project focuses on simplicity and clarity rather than completeness. The goal is to provide directional insights into how developer tools evolve.
 
-## Getting Started
+## Live Demo
 
-First, run the development server:
+https://product-signals.vercel.app/
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* Explore curated OSS developer tools
+* Compare stars, forks, and activity
+* View latest releases and repository metadata
+* Filter and search across tools and categories
+* Expand rows for detailed repository insights
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How it works
 
-## Learn More
+Data flows through a simple pipeline:
 
-To learn more, take a look at the following resources:
+1. GitHub API provides repository data
+2. n8n automations collect and process signals
+3. Supabase stores and serves structured data
+4. Next.js frontend renders and enables exploration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+## Tech Stack
 
-<a href="https://v0.app/chat/api/kiro/clone/slawekmarszalek/product-signals" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
+* Next.js
+* Supabase
+* n8n
+* GitHub API
+* Vercel
+
+## Why I built this
+
+As a Product Manager working on API-first SaaS platforms, I wanted a simple way to track developer tools and emerging trends without manually checking multiple repositories.
+
+This project is an experiment in turning publicly available data into simple, useful product insights.
+
+## Status
+
+MVP, actively evolving.
+
+Planned improvements:
+
+* Trending signals based on stars growth
+* Better categorization
+* Historical tracking
+
+## Author
+
+Sławomir Marszałek
+Product Manager, API-first SaaS
+
+LinkedIn: https://www.linkedin.com/in/slawomir-marszalek/
