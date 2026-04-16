@@ -32,13 +32,16 @@ export function MobileReposList({
   formatCount,
 }: MobileReposListProps) {
   return (
-    <div className="flex flex-col divide-y divide-muted">
-      {repos.map((repo) => (
-        <div key={repo.id} className="flex flex-col">
+    <div className="flex flex-col divide-y divide-border/40">
+      {repos.map((repo, index) => (
+        <div
+          key={repo.id}
+          className={`flex flex-col ${index % 2 === 1 ? "bg-muted/15" : ""}`}
+        >
           {/* Summary row */}
           <button
             onClick={() => onToggleExpand(repo.id)}
-            className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-muted/30 transition-colors"
+            className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-muted/50 transition-colors"
           >
             <ChevronDown
               size={16}
@@ -52,14 +55,14 @@ export function MobileReposList({
                 <span className="text-sm flex-shrink-0">🔥</span>
               )}
             </div>
-            <span className="text-sm text-muted-foreground flex-shrink-0">
+            <span className="text-sm font-normal text-muted-foreground flex-shrink-0">
               {formatCount(repo.stars)} stars
             </span>
           </button>
 
           {/* Expanded details */}
           {expandedId === repo.id && (
-            <div className="px-4 py-4 bg-muted/20">
+            <div className="px-4 py-4 bg-muted/30">
               <div className="flex flex-col gap-5">
                 {repo.description && (
                   <div className="flex flex-col gap-1.5">
