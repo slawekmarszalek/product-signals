@@ -111,7 +111,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
       {filters.length > 0 && (
         <div className="flex flex-col gap-3 rounded-md border p-4 bg-muted/30">
           {filters.map((filter) => (
-            <div key={filter.id} className="flex gap-2 items-end">
+            <div key={filter.id} className="flex flex-col md:flex-row md:items-end gap-2 md:gap-2">
               <Select value={filter.field} onValueChange={(value) => {
                 const newField = value as RepoFilter["field"]
                 const updatedFilters = filters.map((f) =>
@@ -126,7 +126,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                 setFilters(updatedFilters)
                 onFiltersChange(updatedFilters)
               }}>
-                <SelectTrigger className="w-32 h-9 text-xs">
+                <SelectTrigger className="w-full md:w-32 h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -144,7 +144,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                   updateFilter(filter.id, "operator", value)
                 }
               >
-                <SelectTrigger className="w-28 h-9 text-xs">
+                <SelectTrigger className="w-full md:w-28 h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -162,14 +162,14 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                 onChange={(e) =>
                   updateFilter(filter.id, "value", e.target.value)
                 }
-                className="flex-1 h-9 text-xs"
+                className="w-full md:flex-1 h-9 text-xs"
               />
 
               <Button
                 onClick={() => removeFilter(filter.id)}
                 size="sm"
                 variant="ghost"
-                className="h-9 px-2"
+                className="w-full md:w-auto h-9 px-2"
               >
                 <X size={16} />
               </Button>

@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { MobileReposList } from "@/components/mobile-repos-list"
 import { ChevronDown } from "lucide-react"
 
 interface GithubRepo {
@@ -32,6 +33,25 @@ interface GithubReposTableProps {
   onDataLoaded?: (repos: GithubRepo[]) => void
   repos?: GithubRepo[]
   searchQuery?: string
+}
+
+const formatDate = (dateString: string | null) => {
+  if (!dateString) return "-"
+  try {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
+  } catch {
+    return "-"
+  }
+}
+
+const formatCount = (n: number | null) => {
+  if (n === null || n === undefined) return "-"
+  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`
+  return n.toString()
 }
 
 export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQuery }: GithubReposTableProps) {
@@ -123,27 +143,21 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     )
   }
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "-"
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    } catch {
-      return "-"
-    }
-  }
-
-  const formatCount = (n: number | null) => {
-    if (n === null || n === undefined) return "-"
-    if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`
-    return n.toString()
-  }
-
   return (
     <div className="rounded-lg border border-muted bg-muted/30">
+      {/* Mobile list */}
+      <div className="md:hidden">
+        <MobileReposList
+          repos={displayRepos}
+          expandedId={expandedId}
+          onToggleExpand={toggleExpand}
+          formatCount={formatCount}
+          formatDate={formatDate}
+        />
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block">
       <Table>
         <TableHeader>
           <TableRow>
@@ -189,42 +203,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             {expandedId === repo.id && (
               <TableRow className="bg-muted/20 hover:bg-muted/20">
                 <TableCell colSpan={7} className="p-4">
-                  <div className="flex flex-col gap-6 py-2">
-                    {repo.description && (
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm font-medium text-foreground">Description</p>
-                        <p className="text-sm text-muted-foreground leading-6 whitespace-normal break-words">{renderEmojiShortcodes(repo.description)}</p>
-                      </div>
-                    )}
-                    {repo.repo_url && (
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm font-medium text-foreground">Repository</p>
-                        <a
-                          href={repo.repo_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-primary hover:underline break-all"
-                        >
-                          {repo.repo_url}
-                        </a>
-                      </div>
-                    )}
-                    {repo.topics && repo.topics.length > 0 && (
-                      <div className="flex flex-col gap-3">
-                        <p className="text-sm font-medium text-foreground">Categories</p>
-                        <div className="flex flex-wrap gap-2">
-                          {repo.topics.slice(0, 6).map((topic) => (
-                            <span
-                              key={topic}
-                              className="inline-block rounded-full bg-muted px-3 py-1 text-xs text-foreground"
-                            >
-                              {topic}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <ExpandedRowContent repo={repo} />
                 </TableCell>
               </TableRow>
             )}
@@ -232,6 +211,48 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           ))}
         </TableBody>
       </Table>
+      </div>
+    </div>
+  )
+}
+
+function ExpandedRowContent({ repo }: { repo: GithubRepo }) {
+  return (
+    <div className="flex flex-col gap-6 py-2 w-full">
+      {repo.description && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-foreground">Description</p>
+          <p className="text-sm text-muted-foreground leading-6 whitespace-normal break-words">{renderEmojiShortcodes(repo.description)}</p>
+        </div>
+      )}
+      {repo.repo_url && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-foreground">Repository</p>
+          <a
+            href={repo.repo_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary hover:underline break-all"
+          >
+            {repo.repo_url}
+          </a>
+        </div>
+      )}
+      {repo.topics && repo.topics.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium text-foreground">Categories</p>
+          <div className="flex flex-wrap gap-2">
+            {repo.topics.slice(0, 6).map((topic) => (
+              <span
+                key={topic}
+                className="inline-block rounded-full bg-muted px-3 py-1 text-xs text-foreground"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
