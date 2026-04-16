@@ -187,51 +187,68 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
               <TableCell>{formatDate(repo.synced_at)}</TableCell>
             </TableRow>
             {expandedId === repo.id && (
-              <TableRow className="bg-muted/20 hover:bg-muted/20">
-                <TableCell colSpan={7} className="p-4">
-                  <div className="flex flex-col gap-6 py-2">
-                    {repo.description && (
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm font-medium text-foreground">Description</p>
-                        <p className="text-sm text-muted-foreground leading-6 whitespace-normal overflow-visible break-words">{renderEmojiShortcodes(repo.description)}</p>
-                      </div>
-                    )}
-                    {repo.repo_url && (
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm font-medium text-foreground">Repository</p>
-                        <a
-                          href={repo.repo_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-primary hover:underline break-all overflow-wrap-break-word"
-                        >
-                          {repo.repo_url}
-                        </a>
-                      </div>
-                    )}
-                    {repo.topics && repo.topics.length > 0 && (
-                      <div className="flex flex-col gap-3">
-                        <p className="text-sm font-medium text-foreground">Categories</p>
-                        <div className="flex flex-wrap gap-2">
-                          {repo.topics.slice(0, 6).map((topic) => (
-                            <span
-                              key={topic}
-                              className="inline-block rounded-full bg-muted px-3 py-1 text-xs text-foreground"
-                            >
-                              {topic}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
+              <>
+                {/* Desktop expanded row */}
+                <TableRow className="hidden md:table-row bg-muted/20 hover:bg-muted/20">
+                  <TableCell colSpan={7} className="p-4">
+                    <ExpandedRowContent repo={repo} />
+                  </TableCell>
+                </TableRow>
+                {/* Mobile expanded block */}
+                <tr className="md:hidden">
+                  <td colSpan={7} className="p-0">
+                    <div className="w-full bg-muted/20 p-4">
+                      <ExpandedRowContent repo={repo} />
+                    </div>
+                  </td>
+                </tr>
+              </>
             )}
             </Fragment>
           ))}
         </TableBody>
       </Table>
+    </div>
+  )
+}
+
+function ExpandedRowContent({ repo }: { repo: GithubRepo }) {
+  return (
+    <div className="flex flex-col gap-6 py-2 w-full">
+      {repo.description && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-foreground">Description</p>
+          <p className="text-sm text-muted-foreground leading-6 whitespace-normal break-words">{renderEmojiShortcodes(repo.description)}</p>
+        </div>
+      )}
+      {repo.repo_url && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-foreground">Repository</p>
+          <a
+            href={repo.repo_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary hover:underline break-all"
+          >
+            {repo.repo_url}
+          </a>
+        </div>
+      )}
+      {repo.topics && repo.topics.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium text-foreground">Categories</p>
+          <div className="flex flex-wrap gap-2">
+            {repo.topics.slice(0, 6).map((topic) => (
+              <span
+                key={topic}
+                className="inline-block rounded-full bg-muted px-3 py-1 text-xs text-foreground"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
