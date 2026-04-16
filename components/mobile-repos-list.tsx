@@ -1,0 +1,116 @@
+"use client"
+
+import { ChevronDown } from "lucide-react"
+import { renderEmojiShortcodes } from "@/lib/emoji-shortcodes"
+
+interface GithubRepo {
+  id: number
+  company_name: string | null
+  repo_name: string | null
+  repo_url: string | null
+  stars: number | null
+  forks: number | null
+  language: string | null
+  latest_release_name: string | null
+  synced_at: string | null
+  description: string | null
+  topics: string[] | null
+}
+
+interface MobileReposListProps {
+  repos: GithubRepo[]
+  expandedId: number | null
+  onToggleExpand: (id: number) => void
+  formatCount: (n: number | null) => string
+  formatDate: (d: string | null) => string
+}
+
+export function MobileReposList({
+  repos,
+  expandedId,
+  onToggleExpand,
+  formatCount,
+}: MobileReposListProps) {
+  return (
+    <div className="flex flex-col divide-y divide-muted">
+      {repos.map((repo) => (
+        <div key={repo.id} className="flex flex-col">
+          {/* Summary row */}
+          <button
+            onClick={() => onToggleExpand(repo.id)}
+            className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-muted/30 transition-colors"
+          >
+            <ChevronDown
+              size={16}
+              className={`flex-shrink-0 transition-transform ${expandedId === repo.id ? "rotate-180" : ""}`}
+            />
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <span className="font-medium text-sm truncate">
+                {repo.company_name ?? "-"}
+              </span>
+              {repo.stars && repo.stars > 100000 && (
+                <span className="text-sm flex-shrink-0">🔥</span>
+              )}
+            </div>
+            <span className="text-sm text-muted-foreground flex-shrink-0">
+              {formatCount(repo.stars)} stars
+            </span>
+          </button>
+
+          {/* Expanded details */}
+          {expandedId === repo.id && (
+            <div className="px-4 py-4 bg-muted/20">
+              <div className="flex flex-col gap-5">
+                {repo.description && (
+                  <div className="flex flex-col gap-1.5">
+                    <p className="text-xs font-medium text-foreground">Description</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-normal break-words">
+                      {renderEmojiShortcodes(repo.description)}
+                    </p>
+                  </div>
+                )}
+
+                {repo.repo_url && (
+                  <div className="flex flex-col gap-1.5">
+                    <p className="text-xs font-medium text-foreground">Repository</p>
+                    <a
+                      href={repo.repo_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline break-all"
+                    >
+                      {repo.repo_url}
+                    </a>
+                  </div>
+                )}
+
+                {repo.language && (
+                  <div className="flex flex-col gap-1.5">
+                    <p className="text-xs font-medium text-foreground">Language</p>
+                    <p className="text-sm text-muted-foreground">{repo.language}</p>
+                  </div>
+                )}
+
+                {repo.topics && repo.topics.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs font-medium text-foreground">Categories</p>
+                    <div className="flex flex-wrap gap-2">
+                      {repo.topics.slice(0, 6).map((topic) => (
+                        <span
+                          key={topic}
+                          className="inline-block rounded-full bg-muted px-2.5 py-0.5 text-xs text-foreground"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}

@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { MobileReposList } from "@/components/mobile-repos-list"
 import { ChevronDown } from "lucide-react"
 
 interface GithubRepo {
@@ -32,6 +33,25 @@ interface GithubReposTableProps {
   onDataLoaded?: (repos: GithubRepo[]) => void
   repos?: GithubRepo[]
   searchQuery?: string
+}
+
+const formatDate = (dateString: string | null) => {
+  if (!dateString) return "-"
+  try {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
+  } catch {
+    return "-"
+  }
+}
+
+const formatCount = (n: number | null) => {
+  if (n === null || n === undefined) return "-"
+  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`
+  return n.toString()
 }
 
 export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQuery }: GithubReposTableProps) {
@@ -123,27 +143,21 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     )
   }
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "-"
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    } catch {
-      return "-"
-    }
-  }
-
-  const formatCount = (n: number | null) => {
-    if (n === null || n === undefined) return "-"
-    if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`
-    return n.toString()
-  }
-
   return (
     <div className="rounded-lg border border-muted bg-muted/30">
+      {/* Mobile list */}
+      <div className="md:hidden">
+        <MobileReposList
+          repos={displayRepos}
+          expandedId={expandedId}
+          onToggleExpand={toggleExpand}
+          formatCount={formatCount}
+          formatDate={formatDate}
+        />
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block">
       <Table>
         <TableHeader>
           <TableRow>
@@ -187,27 +201,17 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
               <TableCell>{formatDate(repo.synced_at)}</TableCell>
             </TableRow>
             {expandedId === repo.id && (
-              <>
-                {/* Desktop expanded row */}
-                <TableRow className="hidden md:table-row bg-muted/20 hover:bg-muted/20">
-                  <TableCell colSpan={7} className="p-4">
-                    <ExpandedRowContent repo={repo} />
-                  </TableCell>
-                </TableRow>
-                {/* Mobile expanded block */}
-                <tr className="md:hidden">
-                  <td colSpan={7} className="p-0">
-                    <div className="w-full bg-muted/20 p-4">
-                      <ExpandedRowContent repo={repo} />
-                    </div>
-                  </td>
-                </tr>
-              </>
+              <TableRow className="bg-muted/20 hover:bg-muted/20">
+                <TableCell colSpan={7} className="p-4">
+                  <ExpandedRowContent repo={repo} />
+                </TableCell>
+              </TableRow>
             )}
             </Fragment>
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }
