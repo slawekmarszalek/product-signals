@@ -11,7 +11,7 @@ export function Navigation() {
   return (
     <nav className="sticky top-0 z-50 bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
       <div className="h-15 flex items-center">
-        <div className="mx-auto w-full max-w-6xl px-6 flex items-center justify-between h-full">
+        <div className="mx-auto w-full max-w-6xl px-6 flex items-center justify-between gap-8 h-full">
           {/* Brand */}
           <Link 
             href="/" 
