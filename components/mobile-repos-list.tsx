@@ -55,7 +55,7 @@ export function MobileReposList({
                 <span className="text-sm flex-shrink-0">🔥</span>
               )}
             </div>
-            <span className="text-sm font-medium text-foreground flex-shrink-0">
+            <span className="text-sm font-normal text-muted-foreground flex-shrink-0">
               {formatCount(repo.stars)} stars
             </span>
           </button>
