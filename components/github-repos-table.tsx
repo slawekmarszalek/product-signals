@@ -193,7 +193,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
                     {repo.description && (
                       <div className="flex flex-col gap-2">
                         <p className="text-sm font-medium text-foreground">Description</p>
-                        <p className="text-sm text-muted-foreground leading-6">{renderEmojiShortcodes(repo.description)}</p>
+                        <p className="text-sm text-muted-foreground leading-6 whitespace-normal break-words">{renderEmojiShortcodes(repo.description)}</p>
                       </div>
                     )}
                     {repo.repo_url && (
