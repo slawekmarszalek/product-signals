@@ -67,13 +67,13 @@ export function MobileReposList({
               </span>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
-              <span className="text-sm font-normal text-muted-foreground">
+              <span className="text-sm font-normal text-muted-foreground tabular-nums text-right">
                 {formatCount(repo.stars)}
               </span>
-              <span className={`text-xs font-normal flex-shrink-0 ${
-                repo.is_new ? "" : 
-                repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined && repo.delta_stars_pct_24h > 0 
-                  ? "text-foreground" 
+              <span className={`text-xs font-normal w-14 text-right tabular-nums ${
+                repo.is_new ? "text-foreground" :
+                repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined && repo.delta_stars_pct_24h > 0
+                  ? "text-foreground"
                   : "text-muted-foreground"
               }`}>
                 {repo.is_new ? (
