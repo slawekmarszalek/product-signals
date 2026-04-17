@@ -123,7 +123,7 @@ export default function Home() {
                 Open-source developer tools ({repos.length} tracked)
               </p>
               <p className="text-xs text-muted-foreground/60">
-                &#x1F680; Top 3 (24h)
+                &#x1F680; Top 3 by 24h growth
               </p>
             </div>
             <div className="rounded-lg border border-muted bg-muted/30">
