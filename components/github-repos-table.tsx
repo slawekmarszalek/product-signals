@@ -3,7 +3,6 @@
 import { Fragment, useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { renderEmojiShortcodes } from "@/lib/emoji-shortcodes"
-import { getTrendSignal } from "@/lib/trend-utils"
 import {
   Table,
   TableBody,
@@ -187,6 +186,13 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     )
   }
 
+  // Top 3 repos by delta_stars_pct_24h (excluding new repos), same logic as mobile
+  const topTrendIds = displayRepos
+    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined)
+    .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
+    .slice(0, 3)
+    .map(r => r.id)
+
   return (
     <div className="rounded-lg border border-muted bg-muted/30">
       {/* Mobile list */}
@@ -232,11 +238,11 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
                   </button>
                 </TableCell>
                 <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    {repo.company_name ?? "-"}
-                    {repo.stars && repo.stars > 100000 && (
-                      <span className="text-sm">🔥</span>
+                  <div className="flex items-center gap-1.5">
+                    {topTrendIds.includes(repo.id) && (
+                      <span className="text-sm">🚀</span>
                     )}
+                    {repo.company_name ?? "-"}
                   </div>
                 </TableCell>
               <TableCell>{formatCount(repo.stars)}</TableCell>
@@ -244,19 +250,17 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
               <TableCell>{repo.language ?? "-"}</TableCell>
               <TableCell>{repo.latest_release_name ?? "-"}</TableCell>
               <TableCell className="text-right text-sm">
-                <span className={repo.is_new ? "inline-flex items-center gap-1" : ""}>
-                  {repo.is_new ? (
-                    <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
-                      NEW
-                    </span>
-                  ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined ? (
-                    <span className="text-muted-foreground">
-                      {repo.delta_stars_pct_24h >= 0 ? "+" : ""}{repo.delta_stars_pct_24h.toFixed(2)}%
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </span>
+                {repo.is_new ? (
+                  <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
+                    NEW
+                  </span>
+                ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined && repo.delta_stars_pct_24h !== 0 ? (
+                  <span className="text-muted-foreground">
+                    {repo.delta_stars_pct_24h >= 0 ? "+" : ""}{repo.delta_stars_pct_24h.toFixed(2)}%
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">—</span>
+                )}
               </TableCell>
               <TableCell>{formatDate(repo.synced_at)}</TableCell>
             </TableRow>
