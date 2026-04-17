@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { renderEmojiShortcodes } from "@/lib/emoji-shortcodes"
+import { getTrendSignal } from "@/lib/trend-utils"
 import {
   Table,
   TableBody,
@@ -27,6 +28,9 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  repo_full_name?: string | null
+  delta_stars_pct_24h?: number | null
+  is_new?: boolean | null
 }
 
 interface GithubReposTableProps {
@@ -69,18 +73,51 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
   useEffect(() => {
     async function fetchRepos() {
       try {
-        const { data, error } = await supabase
-          .from("github_repos")
-          .select("*")
-          .order("stars", { ascending: false })
+        // Fetch repos and trend data in parallel
+        const [reposResult, trendsResult] = await Promise.all([
+          supabase
+            .from("github_repos")
+            .select("*")
+            .order("stars", { ascending: false }),
+          supabase
+            .from("github_repo_trends_24h")
+            .select("repo_full_name, delta_stars_pct_24h, is_new")
+        ])
 
-        if (error) {
-          setError(error.message)
-        } else {
-          const repoData = data ?? []
-          setRepos(repoData)
-          onDataLoaded?.(repoData)
+        if (reposResult.error) {
+          setError(reposResult.error.message)
+          return
         }
+
+        if (trendsResult.error) {
+          console.warn("[v0] Trend data unavailable:", trendsResult.error.message)
+        }
+
+        // Create trend lookup map by repo_full_name
+        const trendMap = new Map()
+        if (trendsResult.data) {
+          trendsResult.data.forEach((trend: any) => {
+            trendMap.set(trend.repo_full_name, {
+              delta_stars_pct_24h: trend.delta_stars_pct_24h,
+              is_new: trend.is_new
+            })
+          })
+        }
+
+        // Merge trend data into repos
+        const repoData = (reposResult.data ?? []).map((repo: any) => {
+          const fullName = repo.repo_full_name || `${repo.company_name}/${repo.repo_name}`
+          const trend = trendMap.get(fullName)
+          return {
+            ...repo,
+            repo_full_name: fullName,
+            delta_stars_pct_24h: trend?.delta_stars_pct_24h ?? null,
+            is_new: trend?.is_new ?? null
+          }
+        })
+
+        setRepos(repoData)
+        onDataLoaded?.(repoData)
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred")
       } finally {
@@ -95,30 +132,32 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     return (
       <div className="rounded-lg border border-muted bg-muted/30">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-8"></TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Stars</TableHead>
-              <TableHead>Forks</TableHead>
-              <TableHead>Language</TableHead>
-              <TableHead>Latest release</TableHead>
-              <TableHead>Synced at</TableHead>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-8"></TableHead>
+            <TableHead>Company</TableHead>
+            <TableHead>Stars</TableHead>
+            <TableHead>Forks</TableHead>
+            <TableHead>Language</TableHead>
+            <TableHead>Latest release</TableHead>
+            <TableHead className="text-right">24h trend</TableHead>
+            <TableHead>Synced at</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <TableRow key={i}>
+              <TableCell><Skeleton className="h-4 w-4" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-28" /></TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell><Skeleton className="h-4 w-4" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          ))}
+        </TableBody>
         </Table>
       </div>
     )
@@ -167,6 +206,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             <TableHead>Forks</TableHead>
             <TableHead>Language</TableHead>
             <TableHead>Latest release</TableHead>
+            <TableHead className="text-right">24h trend</TableHead>
             <TableHead>Synced at</TableHead>
           </TableRow>
         </TableHeader>
@@ -198,11 +238,26 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
               <TableCell>{formatCount(repo.forks)}</TableCell>
               <TableCell>{repo.language ?? "-"}</TableCell>
               <TableCell>{repo.latest_release_name ?? "-"}</TableCell>
+              <TableCell className="text-right text-sm">
+                <span className={repo.is_new ? "inline-flex items-center gap-1" : ""}>
+                  {repo.is_new ? (
+                    <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
+                      NEW
+                    </span>
+                  ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined ? (
+                    <span className="text-muted-foreground">
+                      {repo.delta_stars_pct_24h >= 0 ? "+" : ""}{repo.delta_stars_pct_24h.toFixed(2)}%
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground">—</span>
+                  )}
+                </span>
+              </TableCell>
               <TableCell>{formatDate(repo.synced_at)}</TableCell>
             </TableRow>
             {expandedId === repo.id && (
               <TableRow className="bg-muted/20 hover:bg-muted/20">
-                <TableCell colSpan={7} className="p-4">
+                <TableCell colSpan={8} className="p-4">
                   <ExpandedRowContent repo={repo} />
                 </TableCell>
               </TableRow>

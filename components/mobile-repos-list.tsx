@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react"
 import { renderEmojiShortcodes } from "@/lib/emoji-shortcodes"
+import { getTrendSignal } from "@/lib/trend-utils"
 
 interface GithubRepo {
   id: number
@@ -15,6 +16,9 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  repo_full_name?: string | null
+  delta_stars_pct_24h?: number | null
+  is_new?: boolean | null
 }
 
 interface MobileReposListProps {
@@ -55,9 +59,22 @@ export function MobileReposList({
                 <span className="text-sm flex-shrink-0">🔥</span>
               )}
             </div>
-            <span className="text-sm font-normal text-muted-foreground flex-shrink-0">
-              {formatCount(repo.stars)} stars
-            </span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-sm font-normal text-muted-foreground">
+                {formatCount(repo.stars)} stars
+              </span>
+              <span className="text-xs font-normal text-muted-foreground">
+                {repo.is_new ? (
+                  <span className="inline-block rounded-full bg-muted px-1.5 py-0.5 text-xs font-medium text-foreground">
+                    NEW
+                  </span>
+                ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined ? (
+                  `${repo.delta_stars_pct_24h >= 0 ? "+" : ""}${repo.delta_stars_pct_24h.toFixed(2)}%`
+                ) : (
+                  "—"
+                )}
+              </span>
+            </div>
           </button>
 
           {/* Expanded details */}
