@@ -93,21 +93,36 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           console.warn("[v0] Trend data unavailable:", trendsResult.error.message)
         }
 
-        // Create trend lookup map by repo_full_name
+        // Debug: log raw data
+        console.log("[v0] reposData sample:", reposResult.data?.slice(0, 3))
+        console.log("[v0] trendsData sample:", trendsResult.data?.slice(0, 3))
+
+        // Create trend lookup map by repo_full_name (normalized to lowercase)
         const trendMap = new Map()
         if (trendsResult.data) {
           trendsResult.data.forEach((trend: any) => {
-            trendMap.set(trend.repo_full_name, {
-              delta_stars_pct_24h: trend.delta_stars_pct_24h,
-              is_new: trend.is_new
-            })
+            if (trend.repo_full_name) {
+              trendMap.set(trend.repo_full_name.toLowerCase(), {
+                delta_stars_pct_24h: trend.delta_stars_pct_24h,
+                is_new: trend.is_new
+              })
+            }
           })
         }
 
+        console.log("[v0] trendMap keys sample:", Array.from(trendMap.keys()).slice(0, 5))
+
         // Merge trend data into repos
         const repoData = (reposResult.data ?? []).map((repo: any) => {
+          // Build the lookup key: prefer repo_full_name, fallback to company_name/repo_name
           const fullName = repo.repo_full_name || `${repo.company_name}/${repo.repo_name}`
-          const trend = trendMap.get(fullName)
+          const lookupKey = fullName?.toLowerCase()
+          const trend = trendMap.get(lookupKey)
+          
+          if (!trend && lookupKey) {
+            console.log("[v0] No trend match for:", lookupKey)
+          }
+          
           return {
             ...repo,
             repo_full_name: fullName,
