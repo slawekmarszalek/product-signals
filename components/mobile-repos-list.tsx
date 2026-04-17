@@ -52,13 +52,13 @@ export function MobileReposList({
           {/* Summary row */}
           <button
             onClick={() => onToggleExpand(repo.id)}
-            className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-muted/50 transition-colors"
+            className="flex items-center gap-2 px-4 py-3 w-full text-left hover:bg-muted/50 transition-colors"
           >
             <ChevronDown
               size={16}
               className={`flex-shrink-0 transition-transform ${expandedId === repo.id ? "rotate-180" : ""}`}
             />
-            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <div className="flex items-center gap-1 flex-1 min-w-0">
               {topTrendRepos.includes(repo.id) && (
                 <span className="text-sm flex-shrink-0">🚀</span>
               )}
@@ -66,8 +66,8 @@ export function MobileReposList({
                 {repo.company_name ?? "-"}
               </span>
             </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <span className="text-sm font-normal text-muted-foreground tabular-nums text-right">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-sm font-normal text-muted-foreground tabular-nums">
                 {formatCount(repo.stars)}
               </span>
               <span className={`text-xs font-normal w-14 text-right tabular-nums ${
