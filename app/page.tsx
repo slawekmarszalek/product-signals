@@ -118,9 +118,14 @@ export default function Home() {
           />
 
           <div className="flex flex-col gap-3">
-            <p className="text-xs text-muted-foreground">
-              Open-source developer tools ({repos.length} tracked)
-            </p>
+            <div className="flex items-baseline gap-3">
+              <p className="text-xs text-muted-foreground">
+                Open-source developer tools ({repos.length} tracked)
+              </p>
+              <p className="text-xs text-muted-foreground/60">
+                &#x1F680; Top 3 by 24h star growth
+              </p>
+            </div>
             <div className="rounded-lg border border-muted bg-muted/30">
               <GithubReposTable onDataLoaded={setRepos} repos={filteredRepos} searchQuery={searchQuery} />
             </div>
