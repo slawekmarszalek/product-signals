@@ -104,7 +104,7 @@ export default function Home() {
               Tracking OSS developer tools
             </h1>
             <p className="text-sm text-muted-foreground">
-              A lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools through public GitHub signals.
+              A lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools and their growth through public GitHub signals.
             </p>
           </div>
 

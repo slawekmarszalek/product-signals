@@ -141,10 +141,10 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             <TableHead className="w-8"></TableHead>
             <TableHead>Company</TableHead>
             <TableHead>Stars</TableHead>
+            <TableHead>Stars (24h)</TableHead>
             <TableHead>Forks</TableHead>
             <TableHead>Language</TableHead>
             <TableHead>Latest release</TableHead>
-            <TableHead className="text-right">24h trend</TableHead>
             <TableHead>Synced at</TableHead>
           </TableRow>
         </TableHeader>
@@ -155,9 +155,9 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
               <TableCell><Skeleton className="h-4 w-32" /></TableCell>
               <TableCell><Skeleton className="h-4 w-16" /></TableCell>
               <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
               <TableCell><Skeleton className="h-4 w-20" /></TableCell>
               <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
               <TableCell><Skeleton className="h-4 w-28" /></TableCell>
             </TableRow>
           ))}
@@ -214,10 +214,10 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             <TableHead className="w-8"></TableHead>
             <TableHead>Company</TableHead>
             <TableHead>Stars</TableHead>
+            <TableHead>Stars (24h)</TableHead>
             <TableHead>Forks</TableHead>
             <TableHead>Language</TableHead>
             <TableHead>Latest release</TableHead>
-            <TableHead className="text-right">24h trend</TableHead>
             <TableHead>Synced at</TableHead>
           </TableRow>
         </TableHeader>
@@ -246,22 +246,22 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
                   </div>
                 </TableCell>
               <TableCell>{formatCount(repo.stars)}</TableCell>
-              <TableCell>{formatCount(repo.forks)}</TableCell>
-              <TableCell>{repo.language ?? "-"}</TableCell>
-              <TableCell>{repo.latest_release_name ?? "-"}</TableCell>
-              <TableCell className="text-right text-sm">
+              <TableCell className="text-sm">
                 {repo.is_new ? (
                   <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
                     NEW
                   </span>
-                ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined && repo.delta_stars_pct_24h !== 0 ? (
+                ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined ? (
                   <span className="text-muted-foreground">
-                    {repo.delta_stars_pct_24h >= 0 ? "+" : ""}{repo.delta_stars_pct_24h.toFixed(2)}%
+                    {repo.delta_stars_pct_24h === 0 ? "0%" : `${repo.delta_stars_pct_24h >= 0 ? "+" : ""}${repo.delta_stars_pct_24h.toFixed(2)}%`}
                   </span>
                 ) : (
                   <span className="text-muted-foreground">—</span>
                 )}
               </TableCell>
+              <TableCell>{formatCount(repo.forks)}</TableCell>
+              <TableCell>{repo.language ?? "-"}</TableCell>
+              <TableCell>{repo.latest_release_name ?? "-"}</TableCell>
               <TableCell>{formatDate(repo.synced_at)}</TableCell>
             </TableRow>
             {expandedId === repo.id && (

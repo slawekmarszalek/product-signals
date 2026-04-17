@@ -81,7 +81,7 @@ export function MobileReposList({
                     NEW
                   </span>
                 ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined ? (
-                  `${repo.delta_stars_pct_24h >= 0 ? "+" : ""}${repo.delta_stars_pct_24h.toFixed(2)}%`
+                  repo.delta_stars_pct_24h === 0 ? "0%" : `${repo.delta_stars_pct_24h >= 0 ? "+" : ""}${repo.delta_stars_pct_24h.toFixed(2)}%`
                 ) : (
                   "—"
                 )}
