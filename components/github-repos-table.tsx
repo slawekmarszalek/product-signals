@@ -27,6 +27,9 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  repo_full_name?: string | null
+  delta_stars_pct_24h?: number | null
+  is_new?: boolean | null
 }
 
 interface GithubReposTableProps {
@@ -69,18 +72,56 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
   useEffect(() => {
     async function fetchRepos() {
       try {
-        const { data, error } = await supabase
-          .from("github_repos")
-          .select("*")
-          .order("stars", { ascending: false })
+        // Fetch repos and trend data in parallel
+        const [reposResult, trendsResult] = await Promise.all([
+          supabase
+            .from("github_repos")
+            .select("*")
+            .order("stars", { ascending: false }),
+          supabase
+            .from("github_repo_trends_24h")
+            .select("repo_full_name, delta_stars_pct_24h, is_new")
+        ])
 
-        if (error) {
-          setError(error.message)
-        } else {
-          const repoData = data ?? []
-          setRepos(repoData)
-          onDataLoaded?.(repoData)
+        if (reposResult.error) {
+          setError(reposResult.error.message)
+          return
         }
+
+        if (trendsResult.error) {
+          console.warn("[v0] Trend data unavailable:", trendsResult.error.message)
+        }
+
+        // Create trend lookup map by repo_full_name (normalized to lowercase)
+        const trendMap = new Map()
+        if (trendsResult.data) {
+          trendsResult.data.forEach((trend: any) => {
+            if (trend.repo_full_name) {
+              trendMap.set(trend.repo_full_name.toLowerCase(), {
+                delta_stars_pct_24h: trend.delta_stars_pct_24h,
+                is_new: trend.is_new
+              })
+            }
+          })
+        }
+
+        // Merge trend data into repos
+        const repoData = (reposResult.data ?? []).map((repo: any) => {
+          // Build the lookup key: prefer repo_full_name, fallback to company_name/repo_name
+          const fullName = repo.repo_full_name || `${repo.company_name}/${repo.repo_name}`
+          const lookupKey = fullName?.toLowerCase()
+          const trend = trendMap.get(lookupKey)
+          
+          return {
+            ...repo,
+            repo_full_name: fullName,
+            delta_stars_pct_24h: trend?.delta_stars_pct_24h ?? null,
+            is_new: trend?.is_new ?? null
+          }
+        })
+
+        setRepos(repoData)
+        onDataLoaded?.(repoData)
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred")
       } finally {
@@ -95,30 +136,32 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     return (
       <div className="rounded-lg border border-muted bg-muted/30">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-8"></TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Stars</TableHead>
-              <TableHead>Forks</TableHead>
-              <TableHead>Language</TableHead>
-              <TableHead>Latest release</TableHead>
-              <TableHead>Synced at</TableHead>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-8"></TableHead>
+            <TableHead>Company</TableHead>
+            <TableHead>Stars</TableHead>
+            <TableHead>Stars (24h)</TableHead>
+            <TableHead>Forks</TableHead>
+            <TableHead>Language</TableHead>
+            <TableHead>Latest release</TableHead>
+            <TableHead>Synced at</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <TableRow key={i}>
+              <TableCell><Skeleton className="h-4 w-4" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-28" /></TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell><Skeleton className="h-4 w-4" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          ))}
+        </TableBody>
         </Table>
       </div>
     )
@@ -143,6 +186,13 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     )
   }
 
+  // Top 3 repos by delta_stars_pct_24h (excluding new repos), same logic as mobile
+  const topTrendIds = displayRepos
+    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined)
+    .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
+    .slice(0, 3)
+    .map(r => r.id)
+
   return (
     <div className="rounded-lg border border-muted bg-muted/30">
       {/* Mobile list */}
@@ -164,6 +214,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             <TableHead className="w-8"></TableHead>
             <TableHead>Company</TableHead>
             <TableHead>Stars</TableHead>
+            <TableHead>Stars (24h)</TableHead>
             <TableHead>Forks</TableHead>
             <TableHead>Language</TableHead>
             <TableHead>Latest release</TableHead>
@@ -187,14 +238,27 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
                   </button>
                 </TableCell>
                 <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    {repo.company_name ?? "-"}
-                    {repo.stars && repo.stars > 100000 && (
-                      <span className="text-sm">🔥</span>
+                  <div className="flex items-center gap-1.5">
+                    {topTrendIds.includes(repo.id) && (
+                      <span className="text-sm">🚀</span>
                     )}
+                    {repo.company_name ?? "-"}
                   </div>
                 </TableCell>
               <TableCell>{formatCount(repo.stars)}</TableCell>
+              <TableCell className="text-sm">
+                {repo.is_new ? (
+                  <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
+                    NEW
+                  </span>
+                ) : repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined ? (
+                  <span className="text-muted-foreground">
+                    {repo.delta_stars_pct_24h === 0 ? "0%" : `${repo.delta_stars_pct_24h >= 0 ? "+" : ""}${repo.delta_stars_pct_24h.toFixed(2)}%`}
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">—</span>
+                )}
+              </TableCell>
               <TableCell>{formatCount(repo.forks)}</TableCell>
               <TableCell>{repo.language ?? "-"}</TableCell>
               <TableCell>{repo.latest_release_name ?? "-"}</TableCell>
@@ -202,7 +266,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             </TableRow>
             {expandedId === repo.id && (
               <TableRow className="bg-muted/20 hover:bg-muted/20">
-                <TableCell colSpan={7} className="p-4">
+                <TableCell colSpan={8} className="p-4">
                   <ExpandedRowContent repo={repo} />
                 </TableCell>
               </TableRow>

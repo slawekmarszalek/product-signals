@@ -104,7 +104,7 @@ export default function Home() {
               Tracking OSS developer tools
             </h1>
             <p className="text-sm text-muted-foreground">
-              A lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools through public GitHub signals.
+              A lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools and their growth through public GitHub signals.
             </p>
           </div>
 
@@ -118,9 +118,14 @@ export default function Home() {
           />
 
           <div className="flex flex-col gap-3">
-            <p className="text-xs text-muted-foreground">
-              Open-source developer tools ({repos.length} tracked)
-            </p>
+            <div className="flex items-baseline gap-3">
+              <p className="text-xs text-muted-foreground">
+                Open-source developer tools ({repos.length} tracked)
+              </p>
+              <p className="text-xs text-muted-foreground/60">
+                &#x1F680; Top 3 by 24h growth
+              </p>
+            </div>
             <div className="rounded-lg border border-muted bg-muted/30">
               <GithubReposTable onDataLoaded={setRepos} repos={filteredRepos} searchQuery={searchQuery} />
             </div>
