@@ -35,6 +35,13 @@ export function MobileReposList({
   onToggleExpand,
   formatCount,
 }: MobileReposListProps) {
+  // Get top 3 repos by delta_stars_pct_24h (excluding new repos)
+  const topTrendRepos = repos
+    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined)
+    .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
+    .slice(0, 3)
+    .map(r => r.id)
+
   return (
     <div className="flex flex-col divide-y divide-border/40">
       {repos.map((repo, index) => (
@@ -51,19 +58,24 @@ export function MobileReposList({
               size={16}
               className={`flex-shrink-0 transition-transform ${expandedId === repo.id ? "rotate-180" : ""}`}
             />
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+              {topTrendRepos.includes(repo.id) && (
+                <span className="text-sm flex-shrink-0">🚀</span>
+              )}
               <span className="font-medium text-sm truncate">
                 {repo.company_name ?? "-"}
               </span>
-              {repo.stars && repo.stars > 100000 && (
-                <span className="text-sm flex-shrink-0">🔥</span>
-              )}
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-3 flex-shrink-0">
               <span className="text-sm font-normal text-muted-foreground">
-                {formatCount(repo.stars)} stars
+                {formatCount(repo.stars)}
               </span>
-              <span className="text-xs font-normal text-muted-foreground">
+              <span className={`text-xs font-normal flex-shrink-0 ${
+                repo.is_new ? "" : 
+                repo.delta_stars_pct_24h !== null && repo.delta_stars_pct_24h !== undefined && repo.delta_stars_pct_24h > 0 
+                  ? "text-foreground" 
+                  : "text-muted-foreground"
+              }`}>
                 {repo.is_new ? (
                   <span className="inline-block rounded-full bg-muted px-1.5 py-0.5 text-xs font-medium text-foreground">
                     NEW
