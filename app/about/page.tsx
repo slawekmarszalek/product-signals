@@ -93,32 +93,61 @@ export default function About() {
               </div>
             </section>
 
-            <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-3">
+            <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-4 md:col-span-2">
               <div className="flex items-center gap-2">
                 <TrendingUp size={18} className="text-muted-foreground shrink-0" />
-                <h2 className="text-lg font-semibold">Recent updates</h2>
+                <h2 className="text-lg font-semibold">Product evolution</h2>
               </div>
-              <ul className="text-sm text-muted-foreground leading-7 list-disc list-inside space-y-1">
-                <li>Introduced 24h trend tracking based on GitHub star growth</li>
-                <li>Added trending signal (🚀) to highlight top 3 fastest-growing tools</li>
-                <li>Improved mobile responsiveness and list readability</li>
-                <li>Refined repository descriptions with emoji support + text wrapping</li>
-                <li>Added project visibility via GitHub link in footer</li>
-              </ul>
-            </section>
+              
+              <p className="text-xs text-muted-foreground">Recent progress and planned improvements</p>
+              
+              <div className="flex flex-col gap-6 md:gap-6">
+                {/* Recently shipped */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-medium text-foreground text-sm">Recently shipped</h3>
+                  <ul className="text-sm text-muted-foreground space-y-3">
+                    <li className="flex gap-2 items-start">
+                      <span className="text-foreground font-medium shrink-0">✓</span>
+                      <span>24h trend tracking based on GitHub star growth</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-foreground font-medium shrink-0">✓</span>
+                      <span>Trending signal (🚀) to highlight top 3 fastest-growing tools</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-foreground font-medium shrink-0">✓</span>
+                      <span>Mobile responsiveness improvements and better list readability</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-foreground font-medium shrink-0">✓</span>
+                      <span>Repository descriptions with emoji support and text wrapping</span>
+                    </li>
+                  </ul>
+                </div>
 
-            <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <Layers size={18} className="text-muted-foreground shrink-0" />
-                <h2 className="text-lg font-semibold">Next steps</h2>
+                {/* Coming next */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-medium text-foreground text-sm">Coming next</h3>
+                  <ul className="text-sm text-muted-foreground space-y-3">
+                    <li className="flex gap-2 items-start">
+                      <span className="text-muted-foreground font-medium shrink-0">→</span>
+                      <span>Sorting by trend (24h growth) to surface emerging tools</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-muted-foreground font-medium shrink-0">→</span>
+                      <span>Longer-term trends (7d / 30d comparisons)</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-muted-foreground font-medium shrink-0">→</span>
+                      <span>Improved filtering (by category, language, growth)</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-muted-foreground font-medium shrink-0">→</span>
+                      <span>Expand tracked tools and enrich tool context</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <ul className="text-sm text-muted-foreground leading-7 list-disc list-inside space-y-1">
-                <li>Expand tracked tools set (curated + signal-driven additions)</li>
-                <li>Add sorting by trend (24h growth) to surface emerging tools</li>
-                <li>Introduce longer-term trends (7d / 30d comparisons)</li>
-                <li>Improve filtering (by category, language, growth)</li>
-                <li>Enrich tool context (descriptions, positioning, use cases)</li>
-              </ul>
             </section>
           </div>
 
