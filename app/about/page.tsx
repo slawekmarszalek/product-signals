@@ -96,20 +96,29 @@ export default function About() {
             <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <TrendingUp size={18} className="text-muted-foreground shrink-0" />
-                <h2 className="text-lg font-semibold">What&apos;s next</h2>
+                <h2 className="text-lg font-semibold">Recent updates</h2>
               </div>
-              <div className="flex flex-col gap-3">
-                <p className="text-sm text-muted-foreground leading-6">
-                  Planned improvements:
-                </p>
-                <ul className="text-sm text-muted-foreground leading-7 list-disc list-inside space-y-1">
-                  <li>Improved filtering and search</li>
-                  <li>Better categorization</li>
-                  <li>Historical tracking</li>
-                  <li>Additional data sources</li>
-                  <li>Richer context</li>
-                </ul>
+              <ul className="text-sm text-muted-foreground leading-7 list-disc list-inside space-y-1">
+                <li>Introduced 24h trend tracking based on GitHub star growth</li>
+                <li>Added trending signal (🚀) to highlight top 3 fastest-growing tools</li>
+                <li>Improved mobile responsiveness and list readability</li>
+                <li>Refined repository descriptions with emoji support + text wrapping</li>
+                <li>Added project visibility via GitHub link in footer</li>
+              </ul>
+            </section>
+
+            <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <Layers size={18} className="text-muted-foreground shrink-0" />
+                <h2 className="text-lg font-semibold">Next steps</h2>
               </div>
+              <ul className="text-sm text-muted-foreground leading-7 list-disc list-inside space-y-1">
+                <li>Expand tracked tools set (curated + signal-driven additions)</li>
+                <li>Add sorting by trend (24h growth) to surface emerging tools</li>
+                <li>Introduce longer-term trends (7d / 30d comparisons)</li>
+                <li>Improve filtering (by category, language, growth)</li>
+                <li>Enrich tool context (descriptions, positioning, use cases)</li>
+              </ul>
             </section>
           </div>
 
