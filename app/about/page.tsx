@@ -1,4 +1,4 @@
-import { Lightbulb, Target, Users, Workflow, Layers, TrendingUp, User } from "lucide-react"
+import { Lightbulb, Target, Users, Workflow, TrendingUp, User } from "lucide-react"
 
 export default function About() {
   return (
@@ -19,9 +19,17 @@ export default function About() {
                 <Lightbulb size={18} className="text-muted-foreground shrink-0" />
                 <h2 className="text-lg font-semibold">What it is</h2>
               </div>
-              <p className="text-sm text-muted-foreground leading-6">
-                Product Signals is a lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools through public GitHub signals. It aggregates data on popularity, recent activity, and release cycles to give you a quick directional view of how these products are evolving.
-              </p>
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-muted-foreground leading-6">
+                  Product Signals tracks a curated set of OSS-first developer tools and surfaces simple, directional insights about their growth.
+                </p>
+                <p className="text-sm text-muted-foreground leading-6">
+                  Instead of browsing repositories manually, it aggregates key signals like GitHub stars, forks, releases, and short-term trends.
+                </p>
+                <p className="text-sm text-muted-foreground leading-6">
+                  The goal is not full analysis, but quick, useful signals that help you understand what&apos;s gaining traction.
+                </p>
+              </div>
             </section>
 
             <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-3">
@@ -31,10 +39,13 @@ export default function About() {
               </div>
               <div className="flex flex-col gap-3">
                 <p className="text-sm text-muted-foreground leading-6">
-                  As a product manager working on API-first SaaS platforms, I wanted a simple way to monitor emerging developer tools without manually checking each repository.
+                  I work on API-first SaaS products and spend a lot of time evaluating tools, integrations, and ecosystems.
                 </p>
                 <p className="text-sm text-muted-foreground leading-6">
-                  Public signals exist on GitHub, but they are scattered and hard to compare. I built this to centralize those signals in one place and make it easier to spot trends and evaluate tools quickly.
+                  Most signals already exist on GitHub, but they&apos;re scattered and hard to compare. I built Product Signals to centralize them and make it easier to spot trends without manual digging.
+                </p>
+                <p className="text-sm text-muted-foreground leading-6">
+                  This is also an experiment in turning public data into simple product insights.
                 </p>
               </div>
             </section>
@@ -62,88 +73,85 @@ export default function About() {
                 <p className="font-medium text-foreground">The data flows through a simple pipeline:</p>
                 <ol className="list-decimal list-inside space-y-1 ml-2">
                   <li>GitHub API provides repository data</li>
-                  <li>n8n automation collects and processes</li>
-                  <li>Supabase stores and serves data</li>
-                  <li>Frontend surfaces with search/filtering</li>
+                  <li>n8n collects and processes updates</li>
+                  <li>Supabase stores historical snapshots</li>
+                  <li>The frontend surfaces signals with filtering and trends</li>
                   <li>Vercel handles deployment</li>
                 </ol>
               </div>
             </section>
 
-            {/* Row 3 */}
-            <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <Layers size={18} className="text-muted-foreground shrink-0" />
-                <h2 className="text-lg font-semibold">Current scope</h2>
-              </div>
-              <div className="flex flex-col gap-3">
-                <p className="text-sm text-muted-foreground leading-6">
-                  This MVP focuses on a curated set of OSS-oriented modern developer tools and tracks a small set of signals:
-                </p>
-                <ul className="text-sm text-muted-foreground leading-7 list-disc list-inside space-y-1">
-                  <li>GitHub stars and forks</li>
-                  <li>Latest release information</li>
-                  <li>Programming language</li>
-                  <li>Repository categories</li>
-                  <li>Sync timing</li>
-                </ul>
-                <p className="text-sm text-muted-foreground leading-6">
-                  The goal is directional insights, not exhaustive data.
-                </p>
-              </div>
-            </section>
+
 
             <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-4 md:col-span-2">
-              <div className="flex items-center gap-2">
-                <TrendingUp size={18} className="text-muted-foreground shrink-0" />
-                <h2 className="text-lg font-semibold">Product evolution</h2>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <TrendingUp size={18} className="text-muted-foreground shrink-0" />
+                  <h2 className="text-lg font-semibold">What&apos;s happening now</h2>
+                </div>
+                <p className="text-xs text-muted-foreground">Last updated: Apr 17, 2026</p>
               </div>
               
               <p className="text-xs text-muted-foreground">Recent progress and planned improvements</p>
               
-              <div className="flex flex-col gap-6 md:gap-6">
+              <div className="flex flex-col gap-6">
                 {/* Recently shipped */}
                 <div className="flex flex-col gap-3">
                   <h3 className="font-medium text-foreground text-sm">Recently shipped</h3>
                   <ul className="text-sm text-muted-foreground space-y-3">
                     <li className="flex gap-2 items-start">
                       <span className="text-foreground font-medium shrink-0">✓</span>
-                      <span>24h trend tracking based on GitHub star growth</span>
+                      <span>24h star growth tracking</span>
                     </li>
                     <li className="flex gap-2 items-start">
                       <span className="text-foreground font-medium shrink-0">✓</span>
-                      <span>Trending signal (🚀) to highlight top 3 fastest-growing tools</span>
+                      <span>Trending signal (top 3 fastest-growing tools)</span>
                     </li>
                     <li className="flex gap-2 items-start">
                       <span className="text-foreground font-medium shrink-0">✓</span>
-                      <span>Mobile responsiveness improvements and better list readability</span>
+                      <span>Mobile UI improvements and better readability</span>
                     </li>
                     <li className="flex gap-2 items-start">
                       <span className="text-foreground font-medium shrink-0">✓</span>
-                      <span>Repository descriptions with emoji support and text wrapping</span>
+                      <span>Improved repository descriptions (emoji + wrapping)</span>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <span className="text-foreground font-medium shrink-0">✓</span>
+                      <span>GitHub link in footer</span>
                     </li>
                   </ul>
                 </div>
 
-                {/* Coming next */}
+                {/* In progress */}
                 <div className="flex flex-col gap-3">
-                  <h3 className="font-medium text-foreground text-sm">Coming next</h3>
+                  <h3 className="font-medium text-foreground text-sm">In progress</h3>
                   <ul className="text-sm text-muted-foreground space-y-3">
                     <li className="flex gap-2 items-start">
                       <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Sorting by trend (24h growth) to surface emerging tools</span>
+                      <span>Sorting by growth (24h)</span>
                     </li>
                     <li className="flex gap-2 items-start">
                       <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Longer-term trends (7d / 30d comparisons)</span>
+                      <span>Expanding tracked tools</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Next */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-medium text-foreground text-sm">Next</h3>
+                  <ul className="text-sm text-muted-foreground space-y-3">
+                    <li className="flex gap-2 items-start">
+                      <span className="text-muted-foreground font-medium shrink-0">→</span>
+                      <span>Longer-term trends (7d / 30d)</span>
                     </li>
                     <li className="flex gap-2 items-start">
                       <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Improved filtering (by category, language, growth)</span>
+                      <span>Improved filtering (category, language, growth)</span>
                     </li>
                     <li className="flex gap-2 items-start">
                       <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Expand tracked tools and enrich tool context</span>
+                      <span>Enriched tool context (descriptions, positioning, use cases)</span>
                     </li>
                   </ul>
                 </div>
