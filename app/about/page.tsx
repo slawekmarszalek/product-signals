@@ -140,6 +140,14 @@ export default function About() {
                       <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
                     </div>
                   </div>
+
+                  {/* Card 5 - no GitHub icon */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm text-foreground">Product progress & roadmap</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features and upcoming improvements</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
