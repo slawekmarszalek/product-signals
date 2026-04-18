@@ -84,17 +84,14 @@ export default function About() {
 
 
             <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-4 md:col-span-2">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <TrendingUp size={18} className="text-muted-foreground shrink-0" />
-                  <h2 className="text-lg font-semibold">What&apos;s happening now</h2>
-                </div>
-                <p className="text-xs text-muted-foreground">Last updated: Apr 17, 2026</p>
+              <div className="flex items-center gap-2">
+                <TrendingUp size={18} className="text-muted-foreground shrink-0" />
+                <h2 className="text-lg font-semibold">What&apos;s happening now</h2>
               </div>
               
               <p className="text-xs text-muted-foreground">Recent progress and planned improvements</p>
               
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:gap-6">
                 {/* Recently shipped */}
                 <div className="flex flex-col gap-3">
                   <h3 className="font-medium text-foreground text-sm">Recently shipped</h3>
@@ -122,38 +119,41 @@ export default function About() {
                   </ul>
                 </div>
 
-                {/* In progress */}
-                <div className="flex flex-col gap-3">
-                  <h3 className="font-medium text-foreground text-sm">In progress</h3>
-                  <ul className="text-sm text-muted-foreground space-y-3">
-                    <li className="flex gap-2 items-start">
-                      <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Sorting by growth (24h)</span>
-                    </li>
-                    <li className="flex gap-2 items-start">
-                      <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Expanding tracked tools</span>
-                    </li>
-                  </ul>
-                </div>
+                {/* Right column: In progress and Next */}
+                <div className="flex flex-col gap-6">
+                  {/* In progress */}
+                  <div className="flex flex-col gap-3">
+                    <h3 className="font-medium text-foreground text-sm">In progress</h3>
+                    <ul className="text-sm text-muted-foreground space-y-3">
+                      <li className="flex gap-2 items-start">
+                        <span className="text-muted-foreground font-medium shrink-0">→</span>
+                        <span>Sorting by growth (24h)</span>
+                      </li>
+                      <li className="flex gap-2 items-start">
+                        <span className="text-muted-foreground font-medium shrink-0">→</span>
+                        <span>Expanding tracked tools</span>
+                      </li>
+                    </ul>
+                  </div>
 
-                {/* Next */}
-                <div className="flex flex-col gap-3">
-                  <h3 className="font-medium text-foreground text-sm">Next</h3>
-                  <ul className="text-sm text-muted-foreground space-y-3">
-                    <li className="flex gap-2 items-start">
-                      <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Longer-term trends (7d / 30d)</span>
-                    </li>
-                    <li className="flex gap-2 items-start">
-                      <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Improved filtering (category, language, growth)</span>
-                    </li>
-                    <li className="flex gap-2 items-start">
-                      <span className="text-muted-foreground font-medium shrink-0">→</span>
-                      <span>Enriched tool context (descriptions, positioning, use cases)</span>
-                    </li>
-                  </ul>
+                  {/* Next */}
+                  <div className="flex flex-col gap-3 mt-4">
+                    <h3 className="font-medium text-foreground text-sm">Next</h3>
+                    <ul className="text-sm text-muted-foreground space-y-3">
+                      <li className="flex gap-2 items-start">
+                        <span className="text-muted-foreground font-medium shrink-0">→</span>
+                        <span>Longer-term trends (7d / 30d)</span>
+                      </li>
+                      <li className="flex gap-2 items-start">
+                        <span className="text-muted-foreground font-medium shrink-0">→</span>
+                        <span>Improved filtering (category, language, growth)</span>
+                      </li>
+                      <li className="flex gap-2 items-start">
+                        <span className="text-muted-foreground font-medium shrink-0">→</span>
+                        <span>Enriched tool context (descriptions, positioning, use cases)</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </section>
