@@ -93,7 +93,7 @@ export default function About() {
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Shipped</h3>
                 <div className="grid gap-3 md:grid-cols-2">
-                  {/* Card 1 */}
+                  {/* Card 1 - with GitHub icon */}
                   <a
                     href="https://github.com/slawekmarszalek/product-signals/pull/5"
                     target="_blank"
@@ -102,14 +102,14 @@ export default function About() {
                   >
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">24h star growth tracking</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Track real-time GitHub star velocity</p>
+                      <p className="text-xs text-muted-foreground mt-1">Real-time GitHub star velocity signals</p>
                     </div>
                     <div className="flex justify-end">
                       <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
                     </div>
                   </a>
 
-                  {/* Card 2 */}
+                  {/* Card 2 - with GitHub icon */}
                   <a
                     href="https://github.com/slawekmarszalek/product-signals/pull/5"
                     target="_blank"
@@ -125,53 +125,21 @@ export default function About() {
                     </div>
                   </a>
 
-                  {/* Card 3 */}
-                  <a
-                    href="https://github.com/slawekmarszalek/product-signals/pull/4"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group rounded-lg border border-border bg-card p-4 hover:border-primary/50 hover:bg-muted/50 transition-colors flex flex-col gap-3 cursor-pointer relative"
-                  >
+                  {/* Card 3 - no GitHub icon */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">Mobile responsiveness</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Improved layout and readability</p>
+                      <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
                     </div>
-                    <div className="flex justify-end">
-                      <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
-                    </div>
-                  </a>
+                  </div>
 
-                  {/* Card 4 */}
-                  <a
-                    href="https://github.com/slawekmarszalek/product-signals/pull/2"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group rounded-lg border border-border bg-card p-4 hover:border-primary/50 hover:bg-muted/50 transition-colors flex flex-col gap-3 cursor-pointer relative"
-                  >
+                  {/* Card 4 - no GitHub icon */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">Description rendering</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Emoji support and text wrapping</p>
+                      <h4 className="font-medium text-sm text-foreground">Description rendering improvements</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
                     </div>
-                    <div className="flex justify-end">
-                      <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
-                    </div>
-                  </a>
-
-                  {/* Card 5 */}
-                  <a
-                    href="https://github.com/slawekmarszalek/product-signals/pull/1"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group rounded-lg border border-border bg-card p-4 hover:border-primary/50 hover:bg-muted/50 transition-colors flex flex-col gap-3 cursor-pointer relative"
-                  >
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">GitHub link in footer</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Direct link to repository</p>
-                    </div>
-                    <div className="flex justify-end">
-                      <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
-                    </div>
-                  </a>
+                  </div>
                 </div>
               </div>
 
@@ -180,42 +148,34 @@ export default function About() {
                 <h3 className="font-medium text-foreground text-sm">Coming next</h3>
                 <div className="grid gap-3 md:grid-cols-2">
                   {/* Card 1 */}
-                  <div className="rounded-lg border border-border/50 bg-card/50 p-4 flex flex-col gap-3">
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-muted-foreground">Sorting by 24h growth</h4>
-                      <p className="text-xs text-muted-foreground/70 mt-1">Surface emerging tools easily</p>
+                      <h4 className="font-medium text-sm text-foreground">Sorting by 24h growth</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Surface emerging tools easily</p>
                     </div>
                   </div>
 
                   {/* Card 2 */}
-                  <div className="rounded-lg border border-border/50 bg-card/50 p-4 flex flex-col gap-3">
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-muted-foreground">Expanding tracked tools</h4>
-                      <p className="text-xs text-muted-foreground/70 mt-1">More tools, more signals</p>
+                      <h4 className="font-medium text-sm text-foreground">Expanding tracked tools</h4>
+                      <p className="text-xs text-muted-foreground mt-1">More tools, more signals</p>
                     </div>
                   </div>
 
                   {/* Card 3 */}
-                  <div className="rounded-lg border border-border/50 bg-card/50 p-4 flex flex-col gap-3">
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-muted-foreground">Longer-term trends</h4>
-                      <p className="text-xs text-muted-foreground/70 mt-1">7-day and 30-day comparisons</p>
+                      <h4 className="font-medium text-sm text-foreground">Longer-term trends</h4>
+                      <p className="text-xs text-muted-foreground mt-1">7-day and 30-day comparisons</p>
                     </div>
                   </div>
 
                   {/* Card 4 */}
-                  <div className="rounded-lg border border-border/50 bg-card/50 p-4 flex flex-col gap-3">
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-muted-foreground">Advanced filtering</h4>
-                      <p className="text-xs text-muted-foreground/70 mt-1">Filter by category, language, growth</p>
-                    </div>
-                  </div>
-
-                  {/* Card 5 */}
-                  <div className="rounded-lg border border-border/50 bg-card/50 p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-muted-foreground">Enriched tool context</h4>
-                      <p className="text-xs text-muted-foreground/70 mt-1">Descriptions, positioning, use cases</p>
+                      <h4 className="font-medium text-sm text-foreground">Advanced filtering</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Filter by category, language, growth</p>
                     </div>
                   </div>
                 </div>
