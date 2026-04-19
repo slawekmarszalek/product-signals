@@ -120,8 +120,15 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           }
         })
 
-        setRepos(repoData)
-        onDataLoaded?.(repoData)
+        // Sort by 24h growth (descending), putting repos with null values at the end
+        const sortedData = repoData.sort((a, b) => {
+          const aDelta = a.delta_stars_pct_24h ?? -Infinity
+          const bDelta = b.delta_stars_pct_24h ?? -Infinity
+          return bDelta - aDelta
+        })
+
+        setRepos(sortedData)
+        onDataLoaded?.(sortedData)
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred")
       } finally {

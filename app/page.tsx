@@ -118,17 +118,25 @@ export default function Home() {
           />
 
           <div className="flex flex-col gap-3">
-            <div className="flex items-baseline gap-3">
-              <p className="text-xs text-muted-foreground">
-                Open-source developer tools ({repos.length} tracked)
-              </p>
-              <p className="text-xs text-muted-foreground/60">
-                &#x1F680; Top 3 by 24h growth
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline gap-3">
+                <p className="text-xs text-muted-foreground">
+                  Open-source developer tools ({repos.length} tracked)
+                </p>
+                <p className="text-xs text-muted-foreground/60">
+                  🚀 Top 3 trending tools (24h)
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground/50">
+                Sorted by 24h star growth to highlight emerging tools
               </p>
             </div>
             <div className="rounded-lg border border-muted bg-muted/30">
               <GithubReposTable onDataLoaded={setRepos} repos={filteredRepos} searchQuery={searchQuery} />
             </div>
+            <p className="text-xs text-muted-foreground/50">
+              Data refreshed regularly from public GitHub signals
+            </p>
           </div>
         </div>
       </div>

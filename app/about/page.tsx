@@ -148,6 +148,14 @@ export default function About() {
                       <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features and upcoming improvements</p>
                     </div>
                   </div>
+
+                  {/* Card 6 - no GitHub icon */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm text-foreground">Flexible filtering & search</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Filter repositories by multiple attributes (company, repo, language, categories)</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -184,6 +192,14 @@ export default function About() {
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Advanced filtering</h4>
                       <p className="text-xs text-muted-foreground mt-1">Filter by category, language, growth</p>
+                    </div>
+                  </div>
+
+                  {/* Card 5 */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
                     </div>
                   </div>
                 </div>
