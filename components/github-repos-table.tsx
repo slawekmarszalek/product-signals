@@ -43,6 +43,7 @@ interface GithubReposTableProps {
   onDataLoaded?: (repos: GithubRepo[]) => void
   repos?: GithubRepo[]
   searchQuery?: string
+  globalTopTrendingIds?: number[]
 }
 
 const formatDate = (dateString: string | null) => {
@@ -64,7 +65,7 @@ const formatCount = (n: number | null) => {
   return n.toString()
 }
 
-export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQuery }: GithubReposTableProps) {
+export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQuery, globalTopTrendingIds }: GithubReposTableProps) {
   const [repos, setRepos] = useState<GithubRepo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -115,13 +116,16 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     return activeSortOrder === "desc" ? comparison : -comparison
   })
 
-  // Calculate top 3 trending from the filtered dataset (displayRepos)
-  // This is independent from the current sort order
-  const topTrendingIds = displayRepos
+  // Calculate top 3 trending from the full unfiltered dataset (repos)
+  // Independent from current filtering, searching, or table sorting
+  const globalTopTrendingCalculated = repos
     .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined && r.delta_stars_pct_24h > 0)
     .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
     .slice(0, 3)
     .map(r => r.id)
+
+  // Use the passed prop if provided (from parent), otherwise use the calculated one
+  const topTrendingIds = globalTopTrendingIds || globalTopTrendingCalculated
 
   useEffect(() => {
     async function fetchRepos() {
@@ -244,6 +248,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           onToggleExpand={toggleExpand}
           formatCount={formatCount}
           formatDate={formatDate}
+          globalTopTrendingIds={topTrendingIds}
         />
       </div>
 

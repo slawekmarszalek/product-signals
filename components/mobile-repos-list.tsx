@@ -27,6 +27,7 @@ interface MobileReposListProps {
   onToggleExpand: (id: number) => void
   formatCount: (n: number | null) => string
   formatDate: (d: string | null) => string
+  globalTopTrendingIds?: number[]
 }
 
 export function MobileReposList({
@@ -34,10 +35,11 @@ export function MobileReposList({
   expandedId,
   onToggleExpand,
   formatCount,
+  globalTopTrendingIds,
 }: MobileReposListProps) {
-  // Calculate top 3 trending from the current filtered dataset
-  // Independent from any sorting, based purely on delta_stars_pct_24h
-  const topTrendingIds = repos
+  // Use the passed global top 3 IDs (from full dataset)
+  // If not provided, calculate from current repos (fallback)
+  const topTrendingIds = globalTopTrendingIds || repos
     .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined && r.delta_stars_pct_24h > 0)
     .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
     .slice(0, 3)

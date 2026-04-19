@@ -26,6 +26,14 @@ export default function Home() {
   const [filters, setFilters] = useState<RepoFilter[]>([])
   const [filtersVisible, setFiltersVisible] = useState(false)
 
+  // Calculate global top 3 trending repos from the FULL unfiltered dataset
+  // This is independent from search, filters, and sorting
+  const globalTopTrendingIds = repos
+    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined && r.delta_stars_pct_24h > 0)
+    .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
+    .slice(0, 3)
+    .map(r => r.id)
+
   const filteredRepos = useMemo(() => {
     let results = repos
 
@@ -127,7 +135,12 @@ export default function Home() {
               </p>
             </div>
             <div className="rounded-lg border border-muted bg-muted/30">
-              <GithubReposTable onDataLoaded={setRepos} repos={filteredRepos} searchQuery={searchQuery} />
+              <GithubReposTable 
+                onDataLoaded={setRepos} 
+                repos={filteredRepos} 
+                searchQuery={searchQuery}
+                globalTopTrendingIds={globalTopTrendingIds}
+              />
             </div>
           </div>
         </div>
