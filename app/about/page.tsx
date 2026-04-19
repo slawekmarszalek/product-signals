@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Lightbulb, Target, Users, Workflow, TrendingUp, Github } from "lucide-react"
+import { Lightbulb, Target, Users, Workflow, TrendingUp, Github, Linkedin } from "lucide-react"
+import Image from "next/image"
 
 interface RoadmapItem {
   id: string
@@ -289,6 +290,55 @@ export default function About() {
               
               <RoadmapSection title="Shipped" items={shippedItems} />
               <RoadmapSection title="Coming next" items={comingItems} />
+            </section>
+
+            {/* About the builder section */}
+            <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-6 md:col-span-2">
+              <h2 className="text-lg font-semibold">About the builder</h2>
+              
+              <div className="flex flex-col md:flex-row gap-6 items-start">
+                {/* Profile image */}
+                <div className="shrink-0">
+                  <Image
+                    src="/builder-profile.jpg"
+                    alt="Sławomir Marszałek"
+                    width={180}
+                    height={180}
+                    className="rounded-lg object-cover"
+                    priority
+                  />
+                </div>
+                
+                {/* Content */}
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground">Sławomir Marszałek</h3>
+                    <p className="text-sm text-muted-foreground leading-6 mt-2">
+                      Product Manager working on API-first SaaS platforms, focused on integrations, developer workflows, and making complex systems easier to adopt.
+                    </p>
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground leading-6">
+                    I&apos;m interested in how product signals can help teams make better decisions faster — from evaluating tools to understanding emerging trends.
+                  </p>
+                  
+                  <p className="text-sm text-muted-foreground leading-6">
+                    This project is an experiment in turning publicly available data into simple, useful product insights.
+                  </p>
+                  
+                  <div>
+                    <a
+                      href="https://linkedin.com/in/slawekmarszalek"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Linkedin size={16} />
+                      <span>Connect on LinkedIn</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </section>
           </div>
         </div>
