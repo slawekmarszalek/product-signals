@@ -38,7 +38,7 @@ export function SearchFilterBar({
         <Input
           placeholder="Search companies, languages, or categories..."
           onChange={(e) => onSearch(e.target.value)}
-          className="max-w-sm text-sm placeholder:text-muted-foreground/50 placeholder:font-normal"
+          className="max-w-sm text-base md:text-sm placeholder:text-muted-foreground/50 placeholder:font-normal"
         />
       </div>
 

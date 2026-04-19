@@ -13,7 +13,14 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MobileReposList } from "@/components/mobile-repos-list"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, ArrowDown, ArrowUp } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface GithubRepo {
   id: number
@@ -62,12 +69,51 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [sortBy, setSortBy] = useState<"delta_24h" | "stars" | null>("delta_24h")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   
   const displayRepos = externalRepos !== undefined ? externalRepos : repos
   
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id)
   }
+
+  const handleSort = (column: "delta_24h" | "stars") => {
+    if (sortBy === column) {
+      // Cycle: desc -> asc -> reset
+      if (sortOrder === "desc") {
+        setSortOrder("asc")
+      } else {
+        // Reset to default
+        setSortBy("delta_24h")
+        setSortOrder("desc")
+      }
+    } else {
+      // Switch to new column, default to descending
+      setSortBy(column)
+      setSortOrder("desc")
+    }
+  }
+
+  const sortedRepos = [...displayRepos].sort((a, b) => {
+    // If no sort is active, use default (delta_24h descending)
+    const activeSortBy = sortBy || "delta_24h"
+    const activeSortOrder = sortBy === null ? "desc" : sortOrder
+
+    let aVal: number | null = null
+    let bVal: number | null = null
+
+    if (activeSortBy === "delta_24h") {
+      aVal = a.delta_stars_pct_24h ?? -Infinity
+      bVal = b.delta_stars_pct_24h ?? -Infinity
+    } else if (activeSortBy === "stars") {
+      aVal = a.stars ?? -Infinity
+      bVal = b.stars ?? -Infinity
+    }
+
+    const comparison = (bVal as number) - (aVal as number)
+    return activeSortOrder === "desc" ? comparison : -comparison
+  })
 
   useEffect(() => {
     async function fetchRepos() {
@@ -120,8 +166,15 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           }
         })
 
-        setRepos(repoData)
-        onDataLoaded?.(repoData)
+        // Sort by 24h growth (descending), putting repos with null values at the end
+        const sortedData = repoData.sort((a, b) => {
+          const aDelta = a.delta_stars_pct_24h ?? -Infinity
+          const bDelta = b.delta_stars_pct_24h ?? -Infinity
+          return bDelta - aDelta
+        })
+
+        setRepos(sortedData)
+        onDataLoaded?.(sortedData)
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred")
       } finally {
@@ -197,8 +250,49 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     <div className="rounded-lg border border-muted bg-muted/30">
       {/* Mobile list */}
       <div className="md:hidden">
+        {/* Mobile sorting control */}
+        <div className="border-b border-muted bg-muted/50 px-4 py-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground/60 font-medium">Sort by</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground"
+                >
+                  <span>
+                    {sortBy === "delta_24h" ? "Trending (24h)" : "Stars"}
+                  </span>
+                  <ChevronDown size={14} className="ml-1 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-40">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSortBy("delta_24h")
+                    setSortOrder("desc")
+                  }}
+                >
+                  <span>Trending (24h)</span>
+                  {sortBy === "delta_24h" && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSortBy("stars")
+                    setSortOrder("desc")
+                  }}
+                >
+                  <span>Stars</span>
+                  {sortBy === "stars" && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+
         <MobileReposList
-          repos={displayRepos}
+          repos={sortedRepos}
           expandedId={expandedId}
           onToggleExpand={toggleExpand}
           formatCount={formatCount}
@@ -213,8 +307,44 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           <TableRow>
             <TableHead className="w-8"></TableHead>
             <TableHead>Company</TableHead>
-            <TableHead>Stars</TableHead>
-            <TableHead>Stars (24h)</TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-foreground transition-colors group"
+              onClick={() => handleSort("stars")}
+            >
+              <div className="flex items-center gap-1.5">
+                <span className={sortBy === "stars" ? "font-semibold" : ""}>Stars</span>
+                <span className={sortBy === "stars" ? "text-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/60"}>
+                  {sortBy === "stars" ? (
+                    sortOrder === "desc" ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDown size={14} />
+                  )}
+                </span>
+              </div>
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-foreground transition-colors group"
+              onClick={() => handleSort("delta_24h")}
+            >
+              <div className="flex items-center gap-1.5">
+                <span className={sortBy === "delta_24h" ? "font-semibold" : ""}>Stars (24h)</span>
+                <span className={sortBy === "delta_24h" ? "text-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/60"}>
+                  {sortBy === "delta_24h" ? (
+                    sortOrder === "desc" ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDown size={14} />
+                  )}
+                </span>
+              </div>
+            </TableHead>
             <TableHead>Forks</TableHead>
             <TableHead>Language</TableHead>
             <TableHead>Latest release</TableHead>
@@ -222,7 +352,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           </TableRow>
         </TableHeader>
         <TableBody>
-          {displayRepos.map((repo) => (
+          {sortedRepos.map((repo) => (
             <Fragment key={repo.id}>
               <TableRow className="hover:bg-muted/30 transition-colors">
                 <TableCell className="w-8 p-2">

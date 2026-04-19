@@ -95,7 +95,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2 md:gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold">Filters</h3>
         <Button
@@ -109,7 +109,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
       </div>
 
       {filters.length > 0 && (
-        <div className="flex flex-col gap-3 rounded-md border p-4 bg-muted/30">
+        <div className="flex flex-col gap-2 md:gap-3 rounded-md border p-3 md:p-4 bg-muted/30">
           {filters.map((filter) => (
             <div key={filter.id} className="flex flex-col md:flex-row md:items-end gap-2 md:gap-2">
               <Select value={filter.field} onValueChange={(value) => {
@@ -162,7 +162,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                 onChange={(e) =>
                   updateFilter(filter.id, "value", e.target.value)
                 }
-                className="w-full md:flex-1 h-9 text-xs"
+                className="w-full md:flex-1 h-9 text-base md:text-xs"
               />
 
               <Button
