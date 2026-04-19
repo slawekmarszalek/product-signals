@@ -62,7 +62,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<number | null>(null)
-  const [sortBy, setSortBy] = useState<"delta_24h" | "stars">("delta_24h")
+  const [sortBy, setSortBy] = useState<"delta_24h" | "stars" | null>("delta_24h")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   
   const displayRepos = externalRepos !== undefined ? externalRepos : repos
@@ -73,8 +73,14 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
 
   const handleSort = (column: "delta_24h" | "stars") => {
     if (sortBy === column) {
-      // Toggle sort order
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+      // Cycle: desc -> asc -> reset
+      if (sortOrder === "desc") {
+        setSortOrder("asc")
+      } else {
+        // Reset to default
+        setSortBy("delta_24h")
+        setSortOrder("desc")
+      }
     } else {
       // Switch to new column, default to descending
       setSortBy(column)
@@ -83,19 +89,23 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
   }
 
   const sortedRepos = [...displayRepos].sort((a, b) => {
+    // If no sort is active, use default (delta_24h descending)
+    const activeSortBy = sortBy || "delta_24h"
+    const activeSortOrder = sortBy === null ? "desc" : sortOrder
+
     let aVal: number | null = null
     let bVal: number | null = null
 
-    if (sortBy === "delta_24h") {
+    if (activeSortBy === "delta_24h") {
       aVal = a.delta_stars_pct_24h ?? -Infinity
       bVal = b.delta_stars_pct_24h ?? -Infinity
-    } else if (sortBy === "stars") {
+    } else if (activeSortBy === "stars") {
       aVal = a.stars ?? -Infinity
       bVal = b.stars ?? -Infinity
     }
 
     const comparison = (bVal as number) - (aVal as number)
-    return sortOrder === "desc" ? comparison : -comparison
+    return activeSortOrder === "desc" ? comparison : -comparison
   })
 
   useEffect(() => {
