@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MobileReposList } from "@/components/mobile-repos-list"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, ArrowDown, ArrowUp } from "lucide-react"
 
 interface GithubRepo {
   id: number
@@ -260,29 +260,41 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
             <TableHead className="w-8"></TableHead>
             <TableHead>Company</TableHead>
             <TableHead
-              className="cursor-pointer hover:text-foreground transition-colors"
+              className="cursor-pointer hover:text-foreground transition-colors group"
               onClick={() => handleSort("stars")}
             >
-              <div className="flex items-center gap-1">
-                Stars
-                {sortBy === "stars" && (
-                  <span className="text-xs text-muted-foreground">
-                    {sortOrder === "desc" ? "↓" : "↑"}
-                  </span>
-                )}
+              <div className="flex items-center gap-1.5">
+                <span className={sortBy === "stars" ? "font-semibold" : ""}>Stars</span>
+                <span className={sortBy === "stars" ? "text-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/60"}>
+                  {sortBy === "stars" ? (
+                    sortOrder === "desc" ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDown size={14} />
+                  )}
+                </span>
               </div>
             </TableHead>
             <TableHead
-              className="cursor-pointer hover:text-foreground transition-colors"
+              className="cursor-pointer hover:text-foreground transition-colors group"
               onClick={() => handleSort("delta_24h")}
             >
-              <div className="flex items-center gap-1">
-                Stars (24h)
-                {sortBy === "delta_24h" && (
-                  <span className="text-xs text-muted-foreground">
-                    {sortOrder === "desc" ? "↓" : "↑"}
-                  </span>
-                )}
+              <div className="flex items-center gap-1.5">
+                <span className={sortBy === "delta_24h" ? "font-semibold" : ""}>Stars (24h)</span>
+                <span className={sortBy === "delta_24h" ? "text-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/60"}>
+                  {sortBy === "delta_24h" ? (
+                    sortOrder === "desc" ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDown size={14} />
+                  )}
+                </span>
               </div>
             </TableHead>
             <TableHead>Forks</TableHead>
