@@ -14,6 +14,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { MobileReposList } from "@/components/mobile-repos-list"
 import { ChevronDown, ArrowDown, ArrowUp } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface GithubRepo {
   id: number
@@ -243,8 +250,30 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     <div className="rounded-lg border border-muted bg-muted/30">
       {/* Mobile list */}
       <div className="md:hidden">
+        {/* Mobile sorting control */}
+        <div className="border-b border-muted bg-muted/50 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">Sort by:</label>
+            <Select
+              value={sortBy === "delta_24h" ? "delta_24h" : sortBy === "stars" ? "stars" : "delta_24h"}
+              onValueChange={(value) => {
+                setSortBy(value as "delta_24h" | "stars")
+                setSortOrder("desc")
+              }}
+            >
+              <SelectTrigger className="w-full h-9 text-base">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="delta_24h">Trending (24h)</SelectItem>
+                <SelectItem value="stars">Stars</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         <MobileReposList
-          repos={displayRepos}
+          repos={sortedRepos}
           expandedId={expandedId}
           onToggleExpand={toggleExpand}
           formatCount={formatCount}

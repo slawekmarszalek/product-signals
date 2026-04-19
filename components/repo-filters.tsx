@@ -162,7 +162,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                 onChange={(e) =>
                   updateFilter(filter.id, "value", e.target.value)
                 }
-                className="w-full md:flex-1 h-9 text-xs"
+                className="w-full md:flex-1 h-9 text-base md:text-xs"
               />
 
               <Button
