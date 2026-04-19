@@ -252,40 +252,43 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
       <div className="md:hidden">
         {/* Mobile sorting control */}
         <div className="border-b border-muted bg-muted/50 px-4 py-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground"
-              >
-                <span>
-                  {sortBy === "delta_24h" ? "Trending (24h)" : "Stars"}
-                </span>
-                <ChevronDown size={14} className="ml-1 opacity-60" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-40">
-              <DropdownMenuItem
-                onClick={() => {
-                  setSortBy("delta_24h")
-                  setSortOrder("desc")
-                }}
-              >
-                <span>Trending (24h)</span>
-                {sortBy === "delta_24h" && <span className="ml-auto text-xs">✓</span>}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setSortBy("stars")
-                  setSortOrder("desc")
-                }}
-              >
-                <span>Stars</span>
-                {sortBy === "stars" && <span className="ml-auto text-xs">✓</span>}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground/60 font-medium">Sort by</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground"
+                >
+                  <span>
+                    {sortBy === "delta_24h" ? "Trending (24h)" : "Stars"}
+                  </span>
+                  <ChevronDown size={14} className="ml-1 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-40">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSortBy("delta_24h")
+                    setSortOrder("desc")
+                  }}
+                >
+                  <span>Trending (24h)</span>
+                  {sortBy === "delta_24h" && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSortBy("stars")
+                    setSortOrder("desc")
+                  }}
+                >
+                  <span>Stars</span>
+                  {sortBy === "stars" && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <MobileReposList

@@ -1,6 +1,11 @@
+"use client"
+
+import { useState } from "react"
 import { Lightbulb, Target, Users, Workflow, TrendingUp, User, Github } from "lucide-react"
 
 export default function About() {
+  const [showAllShipped, setShowAllShipped] = useState(false)
+  const [showAllComing, setShowAllComing] = useState(false)
   return (
     <div className="font-sans">
       <div className="mx-auto w-full max-w-4xl px-6 py-12">
@@ -142,19 +147,53 @@ export default function About() {
                   </div>
 
                   {/* Card 5 - no GitHub icon */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Product progress & roadmap</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features and upcoming improvements</p>
+                  {showAllShipped && (
+                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-foreground">Product progress & roadmap</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features and upcoming improvements</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Card 6 - no GitHub icon */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Flexible filtering & search</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Filter repositories by multiple attributes (company, repo, language, categories)</p>
+                  {showAllShipped && (
+                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-foreground">Flexible filtering & search</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Filter repositories by multiple attributes (company, repo, language, categories)</p>
+                      </div>
                     </div>
+                  )}
+
+                  {/* Card 7 - no GitHub icon */}
+                  {showAllShipped && (
+                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-foreground">Sorting controls</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Sort by stars and 24h growth with intuitive controls</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Card 8 - no GitHub icon */}
+                  {showAllShipped && (
+                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-foreground">Expanding tracked tools</h4>
+                        <p className="text-xs text-muted-foreground mt-1">More tools, more signals</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Show more button for shipped */}
+                  <div className="md:col-span-2 flex justify-center mt-2">
+                    <button
+                      onClick={() => setShowAllShipped(!showAllShipped)}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+                    >
+                      {showAllShipped ? "View less" : "Show more"}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -174,20 +213,12 @@ export default function About() {
                   {/* Card 2 */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Expanding tracked tools</h4>
-                      <p className="text-xs text-muted-foreground mt-1">More tools, more signals</p>
-                    </div>
-                  </div>
-
-                  {/* Card 3 */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Longer-term trends</h4>
                       <p className="text-xs text-muted-foreground mt-1">7-day and 30-day comparisons</p>
                     </div>
                   </div>
 
-                  {/* Card 4 */}
+                  {/* Card 3 */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Advanced filtering</h4>
@@ -195,12 +226,24 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Card 5 */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                  {/* Card 4 */}
+                  {showAllComing && (
+                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                      </div>
                     </div>
+                  )}
+
+                  {/* Show more button for coming next */}
+                  <div className="md:col-span-2 flex justify-center mt-2">
+                    <button
+                      onClick={() => setShowAllComing(!showAllComing)}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+                    >
+                      {showAllComing ? "View less" : "Show more"}
+                    </button>
                   </div>
                 </div>
               </div>
