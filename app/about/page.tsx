@@ -330,7 +330,7 @@ export default function About() {
                   </p>
                   
                   <a
-                    href="https://linkedin.com/in/slawekmarszalek"
+                    href="https://www.linkedin.com/in/slawomir-marszalek"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
