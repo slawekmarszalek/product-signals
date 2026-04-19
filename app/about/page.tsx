@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Lightbulb, Target, Users, Workflow, TrendingUp, Github } from "lucide-react"
 
 interface RoadmapItem {
@@ -17,17 +17,33 @@ interface RoadmapSectionProps {
 
 function RoadmapSection({ title, items }: RoadmapSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(true)
   
-  // Grid configuration
+  // Detect desktop vs mobile on mount and window resize
+  useEffect(() => {
+    const updateLayout = () => {
+      setIsDesktop(window.innerWidth >= 768) // md breakpoint
+    }
+    
+    updateLayout()
+    window.addEventListener('resize', updateLayout)
+    return () => window.removeEventListener('resize', updateLayout)
+  }, [])
+  
+  // Grid configuration - responsive
   const DESKTOP_COLUMNS = 2
+  const MOBILE_COLUMNS = 1
   const VISIBLE_ROWS = 2
-  const VISIBLE_COUNT = DESKTOP_COLUMNS * VISIBLE_ROWS // 4 items on desktop
+  
+  // Calculate visible count based on layout
+  const columns = isDesktop ? DESKTOP_COLUMNS : MOBILE_COLUMNS
+  const VISIBLE_COUNT = columns * VISIBLE_ROWS // 4 on desktop, 2 on mobile
   
   // Calculate what to show
   const hasMoreItems = items.length > VISIBLE_COUNT
   const visibleItems = items.slice(0, VISIBLE_COUNT)
   const previewStartIndex = VISIBLE_COUNT
-  const previewEndIndex = previewStartIndex + DESKTOP_COLUMNS
+  const previewEndIndex = previewStartIndex + columns // Show 2 preview items on desktop, 1 on mobile
   const previewItems = items.slice(previewStartIndex, previewEndIndex)
   const allExpandedItems = items.slice(VISIBLE_COUNT)
   
