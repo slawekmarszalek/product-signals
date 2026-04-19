@@ -32,7 +32,10 @@ export function RepoInsights({ repos }: RepoInsightsProps) {
     .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined)
     .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))[0]
 
-  const topRepo = repos[0]
+  // Find top repo by stars (independent of table sorting)
+  const topStarRepo = repos
+    .filter(r => r.stars !== null && r.stars !== undefined)
+    .sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0))[0]
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -53,8 +56,8 @@ export function RepoInsights({ repos }: RepoInsightsProps) {
       <div className="rounded-md border p-4">
         <p className="text-xs font-medium text-muted-foreground">Top by stars</p>
         <div className="mt-3 flex flex-col gap-1">
-          <p className="font-semibold">{topRepo.company_name ?? "—"}</p>
-          <p className="text-xs text-muted-foreground">{formatCount(topRepo.stars)} stars · #1 by popularity</p>
+          <p className="font-semibold">{topStarRepo?.company_name ?? "—"}</p>
+          <p className="text-xs text-muted-foreground">{formatCount(topStarRepo?.stars)} stars · #1 by popularity</p>
         </div>
       </div>
     </div>

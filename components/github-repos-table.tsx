@@ -62,12 +62,41 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [sortBy, setSortBy] = useState<"delta_24h" | "stars">("delta_24h")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   
   const displayRepos = externalRepos !== undefined ? externalRepos : repos
   
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id)
   }
+
+  const handleSort = (column: "delta_24h" | "stars") => {
+    if (sortBy === column) {
+      // Toggle sort order
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+    } else {
+      // Switch to new column, default to descending
+      setSortBy(column)
+      setSortOrder("desc")
+    }
+  }
+
+  const sortedRepos = [...displayRepos].sort((a, b) => {
+    let aVal: number | null = null
+    let bVal: number | null = null
+
+    if (sortBy === "delta_24h") {
+      aVal = a.delta_stars_pct_24h ?? -Infinity
+      bVal = b.delta_stars_pct_24h ?? -Infinity
+    } else if (sortBy === "stars") {
+      aVal = a.stars ?? -Infinity
+      bVal = b.stars ?? -Infinity
+    }
+
+    const comparison = (bVal as number) - (aVal as number)
+    return sortOrder === "desc" ? comparison : -comparison
+  })
 
   useEffect(() => {
     async function fetchRepos() {
@@ -220,8 +249,32 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           <TableRow>
             <TableHead className="w-8"></TableHead>
             <TableHead>Company</TableHead>
-            <TableHead>Stars</TableHead>
-            <TableHead>Stars (24h)</TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("stars")}
+            >
+              <div className="flex items-center gap-1">
+                Stars
+                {sortBy === "stars" && (
+                  <span className="text-xs text-muted-foreground">
+                    {sortOrder === "desc" ? "↓" : "↑"}
+                  </span>
+                )}
+              </div>
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("delta_24h")}
+            >
+              <div className="flex items-center gap-1">
+                Stars (24h)
+                {sortBy === "delta_24h" && (
+                  <span className="text-xs text-muted-foreground">
+                    {sortOrder === "desc" ? "↓" : "↑"}
+                  </span>
+                )}
+              </div>
+            </TableHead>
             <TableHead>Forks</TableHead>
             <TableHead>Language</TableHead>
             <TableHead>Latest release</TableHead>
@@ -229,7 +282,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           </TableRow>
         </TableHeader>
         <TableBody>
-          {displayRepos.map((repo) => (
+          {sortedRepos.map((repo) => (
             <Fragment key={repo.id}>
               <TableRow className="hover:bg-muted/30 transition-colors">
                 <TableCell className="w-8 p-2">
