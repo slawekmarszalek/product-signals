@@ -146,21 +146,18 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Hint for desktop - "More items" text above preview */}
-                  {!showAllShipped && (
-                    <div className="md:col-span-2 text-xs text-muted-foreground/50 font-medium pt-1 pb-1 hidden md:block">
-                      More items ↓
-                    </div>
-                  )}
-
                   {/* Preview card - visible only when collapsed and more items exist */}
                   {!showAllShipped && (
-                    <div className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 pointer-events-none relative" style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
+                    <button
+                      onClick={() => setShowAllShipped(true)}
+                      className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
+                      style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
+                    >
                       <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
                         <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
                         <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
                       </div>
-                    </div>
+                    </button>
                   )}
 
                   {/* Expanded cards - visible when showAllShipped is true */}
@@ -197,18 +194,18 @@ export default function About() {
                           <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features</p>
                         </div>
                       </div>
+
+                      {/* View less button - only when expanded */}
+                      <div className="md:col-span-2 pt-2">
+                        <button
+                          onClick={() => setShowAllShipped(false)}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+                        >
+                          View less ←
+                        </button>
+                      </div>
                     </>
                   )}
-
-                  {/* Show more button - left aligned */}
-                  <div className="md:col-span-2 pt-2">
-                    <button
-                      onClick={() => setShowAllShipped(!showAllShipped)}
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
-                    >
-                      {showAllShipped ? "View less ←" : "Show more →"}
-                    </button>
-                  </div>
                 </div>
               </div>
 
@@ -240,42 +237,41 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Hint for desktop - "More items" text above preview */}
-                  {!showAllComing && (
-                    <div className="md:col-span-2 text-xs text-muted-foreground/50 font-medium pt-1 pb-1 hidden md:block">
-                      More items ↓
-                    </div>
-                  )}
-
                   {/* Preview card - visible only when collapsed */}
                   {!showAllComing && (
-                    <div className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 pointer-events-none relative" style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
+                    <button
+                      onClick={() => setShowAllComing(true)}
+                      className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
+                      style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
+                    >
                       <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
                         <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
                         <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
                       </div>
-                    </div>
+                    </button>
                   )}
 
                   {/* Expanded card - visible when showAllComing is true */}
                   {showAllComing && (
-                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
-                        <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                    <>
+                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
 
-                  {/* Show more button - left aligned, only if items > 4 */}
-                  <div className="md:col-span-2 pt-2">
-                    <button
-                      onClick={() => setShowAllComing(!showAllComing)}
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
-                    >
-                      {showAllComing ? "View less ←" : "Show more →"}
-                    </button>
-                  </div>
+                      {/* View less button - only when expanded */}
+                      <div className="md:col-span-2 pt-2">
+                        <button
+                          onClick={() => setShowAllComing(false)}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+                        >
+                          View less ←
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </section>
