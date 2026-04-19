@@ -1,11 +1,190 @@
 "use client"
 
 import { useState } from "react"
-import { Lightbulb, Target, Users, Workflow, TrendingUp, User, Github } from "lucide-react"
+import { Lightbulb, Target, Users, Workflow, TrendingUp, Github } from "lucide-react"
+
+interface RoadmapItem {
+  id: string
+  title: string
+  description: string
+  link?: string
+}
+
+interface RoadmapSectionProps {
+  title: string
+  items: RoadmapItem[]
+}
+
+function RoadmapSection({ title, items }: RoadmapSectionProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  
+  // Grid configuration
+  const DESKTOP_COLUMNS = 2
+  const VISIBLE_ROWS = 2
+  const VISIBLE_COUNT = DESKTOP_COLUMNS * VISIBLE_ROWS // 4 items on desktop
+  
+  // Calculate what to show
+  const hasMoreItems = items.length > VISIBLE_COUNT
+  const visibleItems = items.slice(0, VISIBLE_COUNT)
+  const previewStartIndex = VISIBLE_COUNT
+  const previewEndIndex = previewStartIndex + DESKTOP_COLUMNS
+  const previewItems = items.slice(previewStartIndex, previewEndIndex)
+  const allExpandedItems = items.slice(VISIBLE_COUNT)
+  
+  const renderCard = (item: RoadmapItem, isFaded = false) => {
+    const cardClasses = isFaded
+      ? "rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
+      : "rounded-lg border border-border bg-card p-4 flex flex-col gap-3"
+    
+    const cardStyle = isFaded
+      ? { maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }
+      : {}
+    
+    const content = (
+      <div className="flex-1" style={isFaded ? { transform: 'translateY(-8px)' } : {}}>
+        <h4 className="font-medium text-sm text-foreground">{item.title}</h4>
+        <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
+      </div>
+    )
+    
+    if (item.link && !isFaded) {
+      return (
+        <a
+          key={item.id}
+          href={item.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group rounded-lg border border-border bg-card p-4 hover:border-primary/50 hover:bg-muted/50 transition-colors flex flex-col gap-3 cursor-pointer relative"
+        >
+          <div className="flex-1">
+            <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{item.title}</h4>
+            <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
+          </div>
+          <div className="flex justify-end">
+            <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
+          </div>
+        </a>
+      )
+    }
+    
+    if (isFaded) {
+      return (
+        <button
+          key={item.id}
+          onClick={() => setIsExpanded(true)}
+          className={cardClasses}
+          style={cardStyle}
+        >
+          {content}
+        </button>
+      )
+    }
+    
+    return (
+      <div key={item.id} className={cardClasses} style={cardStyle}>
+        {content}
+      </div>
+    )
+  }
+  
+  return (
+    <div className="flex flex-col gap-4">
+      <h3 className="font-medium text-foreground text-sm">{title}</h3>
+      <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
+        {/* Always visible items */}
+        {visibleItems.map((item) => renderCard(item))}
+        
+        {/* Preview row - only if there are more items AND not expanded */}
+        {hasMoreItems && !isExpanded && previewItems.map((item) => renderCard(item, true))}
+        
+        {/* All expanded items - only when expanded */}
+        {isExpanded && allExpandedItems.map((item) => renderCard(item))}
+        
+        {/* View less button - only when expanded */}
+        {isExpanded && (
+          <div className="md:col-span-2 pt-2">
+            <button
+              onClick={() => setIsExpanded(false)}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+            >
+              View less ←
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 export default function About() {
-  const [showAllShipped, setShowAllShipped] = useState(false)
-  const [showAllComing, setShowAllComing] = useState(false)
+  const shippedItems: RoadmapItem[] = [
+    {
+      id: "24h-tracking",
+      title: "24h star growth tracking",
+      description: "Real-time GitHub star velocity signals",
+      link: "https://github.com/slawekmarszalek/product-signals/pull/5",
+    },
+    {
+      id: "trending-signal",
+      title: "Trending signal",
+      description: "Highlight top 3 fastest-growing tools",
+      link: "https://github.com/slawekmarszalek/product-signals/pull/5",
+    },
+    {
+      id: "sorting-controls",
+      title: "Sorting controls",
+      description: "Sort by stars and 24h growth with intuitive controls",
+    },
+    {
+      id: "filtering-search",
+      title: "Flexible filtering & search",
+      description: "Filter repositories by multiple attributes",
+    },
+    {
+      id: "mobile-improvements",
+      title: "Mobile responsiveness improvements",
+      description: "Better layout and readability on all screens",
+    },
+    {
+      id: "description-rendering",
+      title: "Description rendering improvements",
+      description: "Emoji support and proper text wrapping",
+    },
+    {
+      id: "github-link",
+      title: "GitHub link in footer",
+      description: "Direct link to repository for transparency",
+    },
+    {
+      id: "product-progress",
+      title: "Product progress & roadmap",
+      description: "Introduced a structured view of shipped features",
+    },
+  ]
+
+  const comingItems: RoadmapItem[] = [
+    {
+      id: "sorting-24h",
+      title: "Sorting by 24h growth",
+      description: "Surface emerging tools easily",
+    },
+    {
+      id: "longer-trends",
+      title: "Longer-term trends",
+      description: "7-day and 30-day comparisons",
+    },
+    {
+      id: "advanced-filtering",
+      title: "Advanced filtering",
+      description: "Filter by category, language, growth",
+    },
+    {
+      id: "dark-mode",
+      title: "Dark mode support",
+      description: "Better experience for low-light environments",
+    },
+  ]
+
   return (
     <div className="font-sans">
       <div className="mx-auto w-full max-w-4xl px-6 py-12">
@@ -86,209 +265,14 @@ export default function About() {
               </div>
             </section>
 
-
-
             <section className="rounded-xl border bg-muted/30 p-6 flex flex-col gap-6 md:col-span-2">
               <div className="flex items-center gap-2">
                 <TrendingUp size={18} className="text-muted-foreground shrink-0" />
                 <h2 className="text-lg font-semibold">Product progress</h2>
               </div>
               
-              {/* Shipped section */}
-              <div className="flex flex-col gap-4">
-                <h3 className="font-medium text-foreground text-sm">Shipped</h3>
-                <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
-                  {/* Always visible cards (4 items = 2 rows on desktop, 2 items on mobile) */}
-                  {/* Card 1 - 24h star growth tracking - with GitHub icon */}
-                  <a
-                    href="https://github.com/slawekmarszalek/product-signals/pull/5"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group rounded-lg border border-border bg-card p-4 hover:border-primary/50 hover:bg-muted/50 transition-colors flex flex-col gap-3 cursor-pointer relative"
-                  >
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">24h star growth tracking</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Real-time GitHub star velocity signals</p>
-                    </div>
-                    <div className="flex justify-end">
-                      <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
-                    </div>
-                  </a>
-
-                  {/* Card 2 - Trending signal - with GitHub icon */}
-                  <a
-                    href="https://github.com/slawekmarszalek/product-signals/pull/5"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group rounded-lg border border-border bg-card p-4 hover:border-primary/50 hover:bg-muted/50 transition-colors flex flex-col gap-3 cursor-pointer relative"
-                  >
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">Trending signal</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Highlight top 3 fastest-growing tools</p>
-                    </div>
-                    <div className="flex justify-end">
-                      <Github size={14} className="text-muted-foreground group-hover:text-primary transition-colors" title="View PR" />
-                    </div>
-                  </a>
-
-                  {/* Card 3 - Sorting controls - no GitHub icon */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Sorting controls</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Sort by stars and 24h growth with intuitive controls</p>
-                    </div>
-                  </div>
-
-                  {/* Card 4 - Flexible filtering & search - no GitHub icon */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Flexible filtering & search</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Filter repositories by multiple attributes</p>
-                    </div>
-                  </div>
-
-                  {/* Preview row - full 2 columns on desktop, visible only when collapsed */}
-                  {!showAllShipped && (
-                    <>
-                      <button
-                        onClick={() => setShowAllShipped(true)}
-                        className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
-                        style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
-                      >
-                        <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
-                          <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => setShowAllShipped(true)}
-                        className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
-                        style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
-                      >
-                        <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
-                          <h4 className="font-medium text-sm text-foreground">Description rendering improvements</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
-                        </div>
-                      </button>
-                    </>
-                  )}
-
-                  {/* Expanded cards - visible when showAllShipped is true */}
-                  {showAllShipped && (
-                    <>
-                      {/* Card 5 - Mobile responsiveness improvements */}
-                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
-                        </div>
-                      </div>
-
-                      {/* Card 6 - Description rendering improvements */}
-                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm text-foreground">Description rendering improvements</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
-                        </div>
-                      </div>
-
-                      {/* Card 7 - GitHub link in footer */}
-                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm text-foreground">GitHub link in footer</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Direct link to repository for transparency</p>
-                        </div>
-                      </div>
-
-                      {/* Card 8 - Product progress & roadmap */}
-                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm text-foreground">Product progress & roadmap</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features</p>
-                        </div>
-                      </div>
-
-                      {/* View less button - only when expanded, full width */}
-                      <div className="md:col-span-2 pt-2">
-                        <button
-                          onClick={() => setShowAllShipped(false)}
-                          className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
-                        >
-                          View less ←
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Coming next section */}
-              <div className="flex flex-col gap-4">
-                <h3 className="font-medium text-foreground text-sm">Coming next</h3>
-                <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
-                  {/* Always visible cards */}
-                  {/* Card 1 - Sorting by 24h growth */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Sorting by 24h growth</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Surface emerging tools easily</p>
-                    </div>
-                  </div>
-
-                  {/* Card 2 - Longer-term trends */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Longer-term trends</h4>
-                      <p className="text-xs text-muted-foreground mt-1">7-day and 30-day comparisons</p>
-                    </div>
-                  </div>
-
-                  {/* Card 3 - Advanced filtering */}
-                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Advanced filtering</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Filter by category, language, growth</p>
-                    </div>
-                  </div>
-
-                  {/* Preview row - visible only when collapsed, single item on desktop */}
-                  {!showAllComing && (
-                    <button
-                      onClick={() => setShowAllComing(true)}
-                      className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
-                      style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
-                    >
-                      <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
-                        <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
-                        <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
-                      </div>
-                    </button>
-                  )}
-
-                  {/* Expanded cards - visible when showAllComing is true */}
-                  {showAllComing && (
-                    <>
-                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
-                          <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
-                        </div>
-                      </div>
-
-                      {/* View less button - only when expanded, full width */}
-                      <div className="md:col-span-2 pt-2">
-                        <button
-                          onClick={() => setShowAllComing(false)}
-                          className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
-                        >
-                          View less ←
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+              <RoadmapSection title="Shipped" items={shippedItems} />
+              <RoadmapSection title="Coming next" items={comingItems} />
             </section>
           </div>
         </div>
