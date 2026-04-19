@@ -35,9 +35,10 @@ export function MobileReposList({
   onToggleExpand,
   formatCount,
 }: MobileReposListProps) {
-  // Get top 3 repos by delta_stars_pct_24h (excluding new repos)
-  const topTrendRepos = repos
-    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined)
+  // Calculate top 3 trending from the current filtered dataset
+  // Independent from any sorting, based purely on delta_stars_pct_24h
+  const topTrendingIds = repos
+    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined && r.delta_stars_pct_24h > 0)
     .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
     .slice(0, 3)
     .map(r => r.id)
@@ -59,7 +60,7 @@ export function MobileReposList({
               className={`flex-shrink-0 transition-transform ${expandedId === repo.id ? "rotate-180" : ""}`}
             />
             <div className="flex items-center gap-1 flex-1 min-w-0">
-              {topTrendRepos.includes(repo.id) && (
+              {topTrendingIds.includes(repo.id) && (
                 <span className="text-sm flex-shrink-0">🚀</span>
               )}
               <span className="font-medium text-sm truncate">
