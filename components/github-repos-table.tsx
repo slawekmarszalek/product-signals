@@ -43,6 +43,7 @@ interface GithubReposTableProps {
   onDataLoaded?: (repos: GithubRepo[]) => void
   repos?: GithubRepo[]
   searchQuery?: string
+  globalTopTrendingIds?: number[]
 }
 
 const formatDate = (dateString: string | null) => {
@@ -64,7 +65,7 @@ const formatCount = (n: number | null) => {
   return n.toString()
 }
 
-export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQuery }: GithubReposTableProps) {
+export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQuery, globalTopTrendingIds }: GithubReposTableProps) {
   const [repos, setRepos] = useState<GithubRepo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -114,6 +115,17 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     const comparison = (bVal as number) - (aVal as number)
     return activeSortOrder === "desc" ? comparison : -comparison
   })
+
+  // Calculate top 3 trending from the full unfiltered dataset (repos)
+  // Independent from current filtering, searching, or table sorting
+  const globalTopTrendingCalculated = repos
+    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined && r.delta_stars_pct_24h > 0)
+    .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
+    .slice(0, 3)
+    .map(r => r.id)
+
+  // Use the passed prop if provided (from parent), otherwise use the calculated one
+  const topTrendingIds = globalTopTrendingIds || globalTopTrendingCalculated
 
   useEffect(() => {
     async function fetchRepos() {
@@ -185,67 +197,6 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
     fetchRepos()
   }, [])
 
-  if (loading) {
-    return (
-      <div className="rounded-lg border border-muted bg-muted/30">
-        <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-8"></TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Stars</TableHead>
-            <TableHead>Stars (24h)</TableHead>
-            <TableHead>Forks</TableHead>
-            <TableHead>Language</TableHead>
-            <TableHead>Latest release</TableHead>
-            <TableHead>Synced at</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <TableRow key={i}>
-              <TableCell><Skeleton className="h-4 w-4" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        </Table>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-destructive">
-        Error loading repos: {error}
-      </div>
-    )
-  }
-
-  if (displayRepos.length === 0 && !loading) {
-    return (
-      <div className="rounded-lg border border-muted bg-muted/30 p-12 text-center">
-        <div className="flex flex-col gap-2 items-center justify-center">
-          <p className="text-base font-medium text-foreground">No results found</p>
-          <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Top 3 repos by delta_stars_pct_24h (excluding new repos), same logic as mobile
-  const topTrendIds = displayRepos
-    .filter(r => !r.is_new && r.delta_stars_pct_24h !== null && r.delta_stars_pct_24h !== undefined)
-    .sort((a, b) => (b.delta_stars_pct_24h ?? 0) - (a.delta_stars_pct_24h ?? 0))
-    .slice(0, 3)
-    .map(r => r.id)
-
   return (
     <div className="rounded-lg border border-muted bg-muted/30">
       {/* Mobile list */}
@@ -297,6 +248,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
           onToggleExpand={toggleExpand}
           formatCount={formatCount}
           formatDate={formatDate}
+          globalTopTrendingIds={topTrendingIds}
         />
       </div>
 
@@ -369,7 +321,7 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-1.5">
-                    {topTrendIds.includes(repo.id) && (
+                    {topTrendingIds.includes(repo.id) && (
                       <span className="text-sm">🚀</span>
                     )}
                     {repo.company_name ?? "-"}
