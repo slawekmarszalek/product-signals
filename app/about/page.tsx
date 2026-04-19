@@ -98,6 +98,7 @@ export default function About() {
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Shipped</h3>
                 <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
+                  {/* Always visible cards (4 items = 2 rows on desktop, 2 items on mobile) */}
                   {/* Card 1 - 24h star growth tracking - with GitHub icon */}
                   <a
                     href="https://github.com/slawekmarszalek/product-signals/pull/5"
@@ -146,18 +147,31 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Preview card - visible only when collapsed and more items exist */}
+                  {/* Preview row - full 2 columns on desktop, visible only when collapsed */}
                   {!showAllShipped && (
-                    <button
-                      onClick={() => setShowAllShipped(true)}
-                      className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
-                      style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
-                    >
-                      <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
-                        <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
-                        <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
-                      </div>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setShowAllShipped(true)}
+                        className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
+                        style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
+                      >
+                        <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
+                          <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => setShowAllShipped(true)}
+                        className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
+                        style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
+                      >
+                        <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
+                          <h4 className="font-medium text-sm text-foreground">Description rendering improvements</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
+                        </div>
+                      </button>
+                    </>
                   )}
 
                   {/* Expanded cards - visible when showAllShipped is true */}
@@ -195,7 +209,7 @@ export default function About() {
                         </div>
                       </div>
 
-                      {/* View less button - only when expanded */}
+                      {/* View less button - only when expanded, full width */}
                       <div className="md:col-span-2 pt-2">
                         <button
                           onClick={() => setShowAllShipped(false)}
@@ -213,12 +227,68 @@ export default function About() {
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Coming next</h3>
                 <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
+                  {/* Always visible cards */}
                   {/* Card 1 - Sorting by 24h growth */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Sorting by 24h growth</h4>
                       <p className="text-xs text-muted-foreground mt-1">Surface emerging tools easily</p>
                     </div>
+                  </div>
+
+                  {/* Card 2 - Longer-term trends */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm text-foreground">Longer-term trends</h4>
+                      <p className="text-xs text-muted-foreground mt-1">7-day and 30-day comparisons</p>
+                    </div>
+                  </div>
+
+                  {/* Card 3 - Advanced filtering */}
+                  <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm text-foreground">Advanced filtering</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Filter by category, language, growth</p>
+                    </div>
+                  </div>
+
+                  {/* Preview row - visible only when collapsed, single item on desktop */}
+                  {!showAllComing && (
+                    <button
+                      onClick={() => setShowAllComing(true)}
+                      className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 hover:opacity-60 transition-opacity cursor-pointer relative text-left"
+                      style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}
+                    >
+                      <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
+                        <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Expanded cards - visible when showAllComing is true */}
+                  {showAllComing && (
+                    <>
+                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                        </div>
+                      </div>
+
+                      {/* View less button - only when expanded, full width */}
+                      <div className="md:col-span-2 pt-2">
+                        <button
+                          onClick={() => setShowAllComing(false)}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+                        >
+                          View less ←
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
                   </div>
 
                   {/* Card 2 - Longer-term trends */}
