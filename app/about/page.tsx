@@ -98,7 +98,7 @@ export default function About() {
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Shipped</h3>
                 <div className="grid gap-3 md:grid-cols-2">
-                  {/* Card 1 - with GitHub icon */}
+                  {/* Card 1 - 24h star growth tracking - with GitHub icon */}
                   <a
                     href="https://github.com/slawekmarszalek/product-signals/pull/5"
                     target="_blank"
@@ -114,7 +114,7 @@ export default function About() {
                     </div>
                   </a>
 
-                  {/* Card 2 - with GitHub icon */}
+                  {/* Card 2 - Trending signal - with GitHub icon */}
                   <a
                     href="https://github.com/slawekmarszalek/product-signals/pull/5"
                     target="_blank"
@@ -130,63 +130,71 @@ export default function About() {
                     </div>
                   </a>
 
-                  {/* Card 3 - no GitHub icon */}
+                  {/* Card 3 - Sorting controls - no GitHub icon */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
+                      <h4 className="font-medium text-sm text-foreground">Sorting controls</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Sort by stars and 24h growth with intuitive controls</p>
                     </div>
                   </div>
 
-                  {/* Card 4 - no GitHub icon */}
+                  {/* Card 4 - Flexible filtering & search - no GitHub icon */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-foreground">Description rendering improvements</h4>
-                      <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
+                      <h4 className="font-medium text-sm text-foreground">Flexible filtering & search</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Filter repositories by multiple attributes</p>
                     </div>
                   </div>
 
-                  {/* Card 5 - no GitHub icon */}
-                  {showAllShipped && (
-                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-foreground">Product progress & roadmap</h4>
-                        <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features and upcoming improvements</p>
+                  {/* Preview card - visible only when collapsed and more items exist */}
+                  {!showAllShipped && (
+                    <div className="md:col-span-2 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-60 pointer-events-none relative">
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-transparent to-background/20"></div>
+                      <div className="flex-1 relative z-10">
+                        <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
                       </div>
                     </div>
                   )}
 
-                  {/* Card 6 - no GitHub icon */}
+                  {/* Expanded cards - visible when showAllShipped is true */}
                   {showAllShipped && (
-                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-foreground">Flexible filtering & search</h4>
-                        <p className="text-xs text-muted-foreground mt-1">Filter repositories by multiple attributes (company, repo, language, categories)</p>
+                    <>
+                      {/* Card 5 - Mobile responsiveness improvements */}
+                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
+                        </div>
                       </div>
-                    </div>
+
+                      {/* Card 6 - Description rendering improvements */}
+                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-foreground">Description rendering improvements</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Emoji support and proper text wrapping</p>
+                        </div>
+                      </div>
+
+                      {/* Card 7 - GitHub link in footer */}
+                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-foreground">GitHub link in footer</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Direct link to repository for transparency</p>
+                        </div>
+                      </div>
+
+                      {/* Card 8 - Product progress & roadmap */}
+                      <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-foreground">Product progress & roadmap</h4>
+                          <p className="text-xs text-muted-foreground mt-1">Introduced a structured view of shipped features</p>
+                        </div>
+                      </div>
+                    </>
                   )}
 
-                  {/* Card 7 - no GitHub icon */}
-                  {showAllShipped && (
-                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-foreground">Sorting controls</h4>
-                        <p className="text-xs text-muted-foreground mt-1">Sort by stars and 24h growth with intuitive controls</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Card 8 - no GitHub icon */}
-                  {showAllShipped && (
-                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-foreground">Expanding tracked tools</h4>
-                        <p className="text-xs text-muted-foreground mt-1">More tools, more signals</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Show more button for shipped */}
+                  {/* Show more button - spans full width */}
                   <div className="md:col-span-2 flex justify-center mt-2">
                     <button
                       onClick={() => setShowAllShipped(!showAllShipped)}
@@ -202,7 +210,7 @@ export default function About() {
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Coming next</h3>
                 <div className="grid gap-3 md:grid-cols-2">
-                  {/* Card 1 */}
+                  {/* Card 1 - Sorting by 24h growth */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Sorting by 24h growth</h4>
@@ -210,7 +218,7 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Card 2 */}
+                  {/* Card 2 - Longer-term trends */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Longer-term trends</h4>
@@ -218,7 +226,7 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Card 3 */}
+                  {/* Card 3 - Advanced filtering */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-sm text-foreground">Advanced filtering</h4>
@@ -226,7 +234,18 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Card 4 */}
+                  {/* Preview card - visible only when collapsed */}
+                  {!showAllComing && (
+                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-60 pointer-events-none relative">
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-transparent to-background/20"></div>
+                      <div className="flex-1 relative z-10">
+                        <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Expanded card - visible when showAllComing is true */}
                   {showAllComing && (
                     <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                       <div className="flex-1">
@@ -236,7 +255,7 @@ export default function About() {
                     </div>
                   )}
 
-                  {/* Show more button for coming next */}
+                  {/* Show more button - spans full width */}
                   <div className="md:col-span-2 flex justify-center mt-2">
                     <button
                       onClick={() => setShowAllComing(!showAllComing)}
