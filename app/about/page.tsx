@@ -97,7 +97,7 @@ export default function About() {
               {/* Shipped section */}
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Shipped</h3>
-                <div className="grid gap-3 md:grid-cols-2">
+                <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
                   {/* Card 1 - 24h star growth tracking - with GitHub icon */}
                   <a
                     href="https://github.com/slawekmarszalek/product-signals/pull/5"
@@ -146,11 +146,17 @@ export default function About() {
                     </div>
                   </div>
 
+                  {/* Hint for desktop - "More items" text above preview */}
+                  {!showAllShipped && (
+                    <div className="md:col-span-2 text-xs text-muted-foreground/50 font-medium pt-1 pb-1 hidden md:block">
+                      More items ↓
+                    </div>
+                  )}
+
                   {/* Preview card - visible only when collapsed and more items exist */}
                   {!showAllShipped && (
-                    <div className="md:col-span-2 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-60 pointer-events-none relative">
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-transparent to-background/20"></div>
-                      <div className="flex-1 relative z-10">
+                    <div className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 pointer-events-none relative" style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
+                      <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
                         <h4 className="font-medium text-sm text-foreground">Mobile responsiveness improvements</h4>
                         <p className="text-xs text-muted-foreground mt-1">Better layout and readability on all screens</p>
                       </div>
@@ -194,13 +200,13 @@ export default function About() {
                     </>
                   )}
 
-                  {/* Show more button - spans full width */}
-                  <div className="md:col-span-2 flex justify-center mt-2">
+                  {/* Show more button - left aligned */}
+                  <div className="md:col-span-2 pt-2">
                     <button
                       onClick={() => setShowAllShipped(!showAllShipped)}
                       className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
                     >
-                      {showAllShipped ? "View less" : "Show more"}
+                      {showAllShipped ? "View less ←" : "Show more →"}
                     </button>
                   </div>
                 </div>
@@ -209,7 +215,7 @@ export default function About() {
               {/* Coming next section */}
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-foreground text-sm">Coming next</h3>
-                <div className="grid gap-3 md:grid-cols-2">
+                <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
                   {/* Card 1 - Sorting by 24h growth */}
                   <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3">
                     <div className="flex-1">
@@ -234,11 +240,17 @@ export default function About() {
                     </div>
                   </div>
 
+                  {/* Hint for desktop - "More items" text above preview */}
+                  {!showAllComing && (
+                    <div className="md:col-span-2 text-xs text-muted-foreground/50 font-medium pt-1 pb-1 hidden md:block">
+                      More items ↓
+                    </div>
+                  )}
+
                   {/* Preview card - visible only when collapsed */}
                   {!showAllComing && (
-                    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-60 pointer-events-none relative">
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-transparent to-background/20"></div>
-                      <div className="flex-1 relative z-10">
+                    <div className="md:col-span-1 rounded-lg border border-border bg-card p-4 flex flex-col gap-3 opacity-45 pointer-events-none relative" style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
+                      <div className="flex-1" style={{ transform: 'translateY(-8px)' }}>
                         <h4 className="font-medium text-sm text-foreground">Dark mode support</h4>
                         <p className="text-xs text-muted-foreground mt-1">Better experience for low-light environments</p>
                       </div>
@@ -255,13 +267,13 @@ export default function About() {
                     </div>
                   )}
 
-                  {/* Show more button - spans full width */}
-                  <div className="md:col-span-2 flex justify-center mt-2">
+                  {/* Show more button - left aligned, only if items > 4 */}
+                  <div className="md:col-span-2 pt-2">
                     <button
                       onClick={() => setShowAllComing(!showAllComing)}
                       className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
                     >
-                      {showAllComing ? "View less" : "Show more"}
+                      {showAllComing ? "View less ←" : "Show more →"}
                     </button>
                   </div>
                 </div>
