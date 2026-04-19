@@ -14,13 +14,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { MobileReposList } from "@/components/mobile-repos-list"
 import { ChevronDown, ArrowDown, ArrowUp } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface GithubRepo {
   id: number
@@ -251,25 +251,41 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
       {/* Mobile list */}
       <div className="md:hidden">
         {/* Mobile sorting control */}
-        <div className="border-b border-muted bg-muted/50 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">Sort by:</label>
-            <Select
-              value={sortBy === "delta_24h" ? "delta_24h" : sortBy === "stars" ? "stars" : "delta_24h"}
-              onValueChange={(value) => {
-                setSortBy(value as "delta_24h" | "stars")
-                setSortOrder("desc")
-              }}
-            >
-              <SelectTrigger className="w-full h-9 text-base">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="delta_24h">Trending (24h)</SelectItem>
-                <SelectItem value="stars">Stars</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="border-b border-muted bg-muted/50 px-4 py-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground"
+              >
+                <span>
+                  {sortBy === "delta_24h" ? "Trending (24h)" : "Stars"}
+                </span>
+                <ChevronDown size={14} className="ml-1 opacity-60" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-40">
+              <DropdownMenuItem
+                onClick={() => {
+                  setSortBy("delta_24h")
+                  setSortOrder("desc")
+                }}
+              >
+                <span>Trending (24h)</span>
+                {sortBy === "delta_24h" && <span className="ml-auto text-xs">✓</span>}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSortBy("stars")
+                  setSortOrder("desc")
+                }}
+              >
+                <span>Stars</span>
+                {sortBy === "stars" && <span className="ml-auto text-xs">✓</span>}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <MobileReposList
