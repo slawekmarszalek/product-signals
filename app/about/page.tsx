@@ -181,19 +181,9 @@ export default function About() {
 
   const comingItems: RoadmapItem[] = [
     {
-      id: "sorting-24h",
-      title: "Sorting by 24h growth",
-      description: "Surface emerging tools easily",
-    },
-    {
       id: "longer-trends",
       title: "Longer-term trends",
       description: "7-day and 30-day comparisons",
-    },
-    {
-      id: "advanced-filtering",
-      title: "Advanced filtering",
-      description: "Filter by category, language, growth",
     },
     {
       id: "dark-mode",
