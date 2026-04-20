@@ -156,6 +156,7 @@ export default function About() {
       id: "category-classification",
       title: "Category classification",
       description: "Group repositories into high-level categories (AI, DevTools, Infra, etc.) for easier filtering and exploration",
+      link: "https://github.com/slawekmarszalek/product-signals/pull/9",
     },
     {
       id: "filtering-search",
