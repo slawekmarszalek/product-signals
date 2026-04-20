@@ -1,0 +1,12 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Light background -->
+  <rect width="128" height="128" fill="#ffffff"/>
+  
+  <!-- "PS" monogram in bold sans-serif -->
+  <text x="64" y="82" font-size="72" font-weight="bold" font-family="system-ui, -apple-system, sans-serif" text-anchor="middle" fill="#1a1a1a" letter-spacing="-2">
+    PS
+  </text>
+  
+  <!-- Subtle blue accent in corner -->
+  <rect x="96" y="8" width="20" height="4" fill="#3b82f6" rx="2"/>
+</svg>
