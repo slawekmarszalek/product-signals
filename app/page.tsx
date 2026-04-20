@@ -151,6 +151,7 @@ export default function Home() {
 
           <SearchFilterBar
             onSearch={setSearchQuery}
+            filters={filters}
             onFiltersChange={setFilters}
             filtersVisible={filtersVisible}
             onFiltersToggle={setFiltersVisible}
@@ -168,10 +169,14 @@ export default function Home() {
               </p>
             </div>
             
-            {filteredRepos.length === 0 ? (
+            {filteredRepos.length === 0 && repos.length > 0 ? (
               <EmptyState 
                 onClearFilters={clearFilters}
-                hasFilters={searchQuery.trim() !== "" || filters.length > 0}
+                hasFilters={searchQuery.trim() !== "" || filters.some((f) =>
+                  f.field === "category"
+                    ? (f.selectedCategories || []).length > 0
+                    : f.value.trim() !== ""
+                )}
               />
             ) : (
               <div className="rounded-lg border border-muted bg-muted/30">

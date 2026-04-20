@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -21,6 +20,7 @@ export interface RepoFilter {
 }
 
 interface RepoFiltersProps {
+  filters: RepoFilter[]
   onFiltersChange: (filters: RepoFilter[]) => void
   availableCategories?: string[]
 }
@@ -55,9 +55,7 @@ const OPERATOR_OPTIONS = {
   ],
 }
 
-export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoFiltersProps) {
-  const [filters, setFilters] = useState<RepoFilter[]>([])
-
+export function RepoFilters({ filters, onFiltersChange, availableCategories = [] }: RepoFiltersProps) {
   const addFilter = () => {
     const newFilter: RepoFilter = {
       id: Math.random().toString(36).substr(2, 9),
@@ -66,15 +64,11 @@ export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoF
       value: "",
       selectedCategories: [],
     }
-    const updatedFilters = [...filters, newFilter]
-    setFilters(updatedFilters)
-    onFiltersChange(updatedFilters)
+    onFiltersChange([...filters, newFilter])
   }
 
   const removeFilter = (id: string) => {
-    const updatedFilters = filters.filter((f) => f.id !== id)
-    setFilters(updatedFilters)
-    onFiltersChange(updatedFilters)
+    onFiltersChange(filters.filter((f) => f.id !== id))
   }
 
   const updateFilter = (
@@ -82,15 +76,11 @@ export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoF
     field: keyof Omit<RepoFilter, "id">,
     value: string | RepoFilter["field"]
   ) => {
-    const updatedFilters = filters.map((f) =>
-      f.id === id ? { ...f, [field]: value } : f
-    )
-    setFilters(updatedFilters)
-    onFiltersChange(updatedFilters)
+    onFiltersChange(filters.map((f) => f.id === id ? { ...f, [field]: value } : f))
   }
 
   const toggleCategory = (filterId: string, category: string) => {
-    const updatedFilters = filters.map((f) => {
+    onFiltersChange(filters.map((f) => {
       if (f.id === filterId) {
         const currentSelected = f.selectedCategories || []
         const isSelected = currentSelected.includes(category)
@@ -102,9 +92,7 @@ export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoF
         }
       }
       return f
-    })
-    setFilters(updatedFilters)
-    onFiltersChange(updatedFilters)
+    }))
   }
 
   const getOperatorsForField = (
@@ -136,7 +124,7 @@ export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoF
             <div key={filter.id} className="flex flex-col md:flex-row md:items-end gap-2 md:gap-2">
               <Select value={filter.field} onValueChange={(value) => {
                 const newField = value as RepoFilter["field"]
-                const updatedFilters = filters.map((f) =>
+                onFiltersChange(filters.map((f) =>
                   f.id === filter.id
                     ? {
                         ...f,
@@ -145,9 +133,7 @@ export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoF
                         selectedCategories: newField === "category" ? [] : f.selectedCategories,
                       }
                     : f
-                )
-                setFilters(updatedFilters)
-                onFiltersChange(updatedFilters)
+                ))
               }}>
                 <SelectTrigger className="w-full md:w-32 h-9 text-xs">
                   <SelectValue />

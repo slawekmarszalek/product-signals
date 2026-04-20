@@ -7,6 +7,7 @@ import { RepoFilters, type RepoFilter } from "@/components/repo-filters"
 
 interface SearchFilterBarProps {
   onSearch: (query: string) => void
+  filters: RepoFilter[]
   onFiltersChange: (filters: RepoFilter[]) => void
   filtersVisible: boolean
   onFiltersToggle: (visible: boolean) => void
@@ -16,6 +17,7 @@ interface SearchFilterBarProps {
 
 export function SearchFilterBar({
   onSearch,
+  filters,
   onFiltersChange,
   filtersVisible,
   onFiltersToggle,
@@ -47,7 +49,7 @@ export function SearchFilterBar({
         />
       </div>
 
-      {filtersVisible && <RepoFilters onFiltersChange={onFiltersChange} availableCategories={availableCategories} />}
+      {filtersVisible && <RepoFilters filters={filters} onFiltersChange={onFiltersChange} availableCategories={availableCategories} />}
     </div>
   )
 }
