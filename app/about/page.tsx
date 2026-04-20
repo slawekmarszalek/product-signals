@@ -153,6 +153,11 @@ export default function About() {
       description: "Sort by stars and 24h growth with intuitive controls",
     },
     {
+      id: "category-classification",
+      title: "Category classification",
+      description: "Group repositories into high-level categories (AI, DevTools, Infra, etc.) for easier filtering and exploration",
+    },
+    {
       id: "filtering-search",
       title: "Flexible filtering & search",
       description: "Filter repositories by multiple attributes",

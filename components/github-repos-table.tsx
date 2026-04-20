@@ -34,6 +34,7 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  category: string | null
   repo_full_name?: string | null
   delta_stars_pct_24h?: number | null
   is_new?: boolean | null
@@ -324,7 +325,14 @@ export function GithubReposTable({ onDataLoaded, repos: externalRepos, searchQue
                     {topTrendingIds.includes(repo.id) && (
                       <span className="text-sm">🚀</span>
                     )}
-                    {repo.company_name ?? "-"}
+                    <div className="flex items-center gap-2">
+                      <span>{repo.company_name ?? "-"}</span>
+                      {repo.category && (
+                        <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                          {repo.category}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </TableCell>
               <TableCell>{formatCount(repo.stars)}</TableCell>
@@ -384,9 +392,17 @@ function ExpandedRowContent({ repo }: { repo: GithubRepo }) {
           </a>
         </div>
       )}
+      {repo.category && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-foreground">Category</p>
+          <span className="inline-block rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground w-fit">
+            {repo.category}
+          </span>
+        </div>
+      )}
       {repo.topics && repo.topics.length > 0 && (
         <div className="flex flex-col gap-3">
-          <p className="text-sm font-medium text-foreground">Categories</p>
+          <p className="text-sm font-medium text-foreground">Topics</p>
           <div className="flex flex-wrap gap-2">
             {repo.topics.slice(0, 6).map((topic) => (
               <span

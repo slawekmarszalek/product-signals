@@ -5,6 +5,7 @@ import { GithubReposTable } from "@/components/github-repos-table"
 import { RepoInsights } from "@/components/repo-insights"
 import { SearchFilterBar } from "@/components/search-filter-bar"
 import { RepoFilters, type RepoFilter } from "@/components/repo-filters"
+import { EmptyState } from "@/components/empty-state"
 
 interface GithubRepo {
   id: number
@@ -18,6 +19,7 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  category: string | null
 }
 
 export default function Home() {
@@ -25,6 +27,17 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [filters, setFilters] = useState<RepoFilter[]>([])
   const [filtersVisible, setFiltersVisible] = useState(false)
+
+  // Get unique categories from repos
+  const availableCategories = useMemo(() => {
+    const categories = new Set<string>()
+    repos.forEach((repo) => {
+      if (repo.category) {
+        categories.add(repo.category)
+      }
+    })
+    return Array.from(categories).sort()
+  }, [repos])
 
   // Calculate global top 3 trending repos from the FULL unfiltered dataset
   // This is independent from search, filters, and sorting
@@ -51,11 +64,23 @@ export default function Home() {
     // Apply dynamic filters (AND logic)
     if (filters.length > 0) {
       // Filter out empty filters first
-      const activeFilters = filters.filter((f) => f.value.trim() !== "")
+      const activeFilters = filters.filter((f) => {
+        if (f.field === "category") {
+          return (f.selectedCategories || []).length > 0
+        }
+        return f.value.trim() !== ""
+      })
 
       if (activeFilters.length > 0) {
         results = results.filter((repo) => {
           return activeFilters.every((filter) => {
+            // Handle multi-select categories
+            if (filter.field === "category") {
+              const selectedCategories = filter.selectedCategories || []
+              const repoCategory = repo.category
+              return selectedCategories.length === 0 || (repoCategory && selectedCategories.includes(repoCategory))
+            }
+
             const fieldValue = repo[filter.field as keyof GithubRepo]
 
             if (filter.field === "stars") {
@@ -103,16 +128,22 @@ export default function Home() {
     return results
   }, [repos, searchQuery, filters])
 
+  const clearFilters = () => {
+    setSearchQuery("")
+    setFilters([])
+    setFiltersVisible(false)
+  }
+
   return (
     <div className="font-sans">
       <div className="mx-auto w-full max-w-6xl px-6 py-12">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
             <h1 className="text-3xl font-bold tracking-tight">
-              Tracking OSS developer tools
+              Open-source developer tools ranked by real GitHub signals
             </h1>
             <p className="text-sm text-muted-foreground">
-              A lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools and their growth through public GitHub signals.
+              A lightweight dashboard for tracking selected open-source and OSS-first tools using GitHub activity, releases, and short-term growth signals.
             </p>
           </div>
 
@@ -120,9 +151,12 @@ export default function Home() {
 
           <SearchFilterBar
             onSearch={setSearchQuery}
+            filters={filters}
             onFiltersChange={setFilters}
             filtersVisible={filtersVisible}
             onFiltersToggle={setFiltersVisible}
+            availableCategories={availableCategories}
+            searchQuery={searchQuery}
           />
 
           <div className="flex flex-col gap-3">
@@ -134,14 +168,26 @@ export default function Home() {
                 🚀 Top 3 trending tools (24h)
               </p>
             </div>
-            <div className="rounded-lg border border-muted bg-muted/30">
-              <GithubReposTable 
-                onDataLoaded={setRepos} 
-                repos={filteredRepos} 
-                searchQuery={searchQuery}
-                globalTopTrendingIds={globalTopTrendingIds}
+            
+            {filteredRepos.length === 0 && repos.length > 0 ? (
+              <EmptyState 
+                onClearFilters={clearFilters}
+                hasFilters={searchQuery.trim() !== "" || filters.some((f) =>
+                  f.field === "category"
+                    ? (f.selectedCategories || []).length > 0
+                    : f.value.trim() !== ""
+                )}
               />
-            </div>
+            ) : (
+              <div className="rounded-lg border border-muted bg-muted/30">
+                <GithubReposTable 
+                  onDataLoaded={setRepos} 
+                  repos={filteredRepos} 
+                  searchQuery={searchQuery}
+                  globalTopTrendingIds={globalTopTrendingIds}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
