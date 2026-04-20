@@ -22,7 +22,7 @@ export function EmptyState({ onClearFilters, hasFilters = false }: EmptyStatePro
           size="sm"
           className="text-xs"
         >
-          Clear filters
+          Clear search and filters
         </Button>
       )}
     </div>
