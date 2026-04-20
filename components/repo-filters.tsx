@@ -121,7 +121,7 @@ export function RepoFilters({ filters, onFiltersChange, availableCategories = []
       {filters.length > 0 && (
         <div className="flex flex-col gap-2 md:gap-3 rounded-md border p-3 md:p-4 bg-muted/30">
           {filters.map((filter) => (
-            <div key={filter.id} className="flex flex-col md:flex-row md:items-end gap-2 md:gap-2">
+            <div key={filter.id} className="flex flex-col md:flex-row md:items-center gap-2">
               <Select value={filter.field} onValueChange={(value) => {
                 const newField = value as RepoFilter["field"]
                 onFiltersChange(filters.map((f) =>
@@ -148,22 +148,20 @@ export function RepoFilters({ filters, onFiltersChange, availableCategories = []
               </Select>
 
               {filter.field === "category" ? (
-                <div className="flex flex-col gap-2 md:flex-1">
-                  <div className="flex flex-wrap gap-2">
-                    {availableCategories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => toggleCategory(filter.id, category)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                          (filter.selectedCategories || []).includes(category)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-2 flex-wrap flex-1 min-h-9">
+                  {availableCategories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => toggleCategory(filter.id, category)}
+                      className={`h-7 px-3 rounded-full text-xs font-medium transition-colors leading-none ${
+                        (filter.selectedCategories || []).includes(category)
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
                 </div>
               ) : (
                 <>
@@ -200,7 +198,7 @@ export function RepoFilters({ filters, onFiltersChange, availableCategories = []
                 onClick={() => removeFilter(filter.id)}
                 size="sm"
                 variant="ghost"
-                className="w-full md:w-auto h-9 px-2"
+                className="w-full md:w-auto h-9 px-2 shrink-0"
               >
                 <X size={16} />
               </Button>
