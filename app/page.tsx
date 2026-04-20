@@ -18,6 +18,7 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  category: string | null
 }
 
 export default function Home() {
@@ -75,6 +76,12 @@ export default function Home() {
               }
             }
 
+            if (filter.field === "category") {
+              const category = fieldValue as string | null
+              if (!category) return false
+              return category.toLowerCase().includes(filter.value.trim().toLowerCase())
+            }
+
             if (filter.field === "topics") {
               const topics = fieldValue as string[] | null
               if (!topics || topics.length === 0) return false
@@ -109,10 +116,10 @@ export default function Home() {
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
             <h1 className="text-3xl font-bold tracking-tight">
-              Tracking OSS developer tools
+              Open-source developer tools ranked by real GitHub signals
             </h1>
             <p className="text-sm text-muted-foreground">
-              A lightweight intelligence dashboard for tracking selected open-source and OSS-first developer tools and their growth through public GitHub signals.
+              A lightweight dashboard for tracking selected open-source and OSS-first tools using GitHub activity, releases, and short-term growth signals.
             </p>
           </div>
 

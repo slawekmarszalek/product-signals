@@ -16,6 +16,7 @@ interface GithubRepo {
   synced_at: string | null
   description: string | null
   topics: string[] | null
+  category: string | null
   repo_full_name?: string | null
   delta_stars_pct_24h?: number | null
   is_new?: boolean | null
@@ -68,6 +69,11 @@ export function MobileReposList({
               <span className="font-medium text-sm truncate">
                 {repo.company_name ?? "-"}
               </span>
+              {repo.category && (
+                <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground flex-shrink-0">
+                  {repo.category}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <span className="text-sm font-normal text-muted-foreground tabular-nums">
@@ -126,9 +132,18 @@ export function MobileReposList({
                   </div>
                 )}
 
+                {repo.category && (
+                  <div className="flex flex-col gap-1.5">
+                    <p className="text-xs font-medium text-foreground">Category</p>
+                    <span className="inline-block rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground w-fit">
+                      {repo.category}
+                    </span>
+                  </div>
+                )}
+
                 {repo.topics && repo.topics.length > 0 && (
                   <div className="flex flex-col gap-2">
-                    <p className="text-xs font-medium text-foreground">Categories</p>
+                    <p className="text-xs font-medium text-foreground">Topics</p>
                     <div className="flex flex-wrap gap-2">
                       {repo.topics.slice(0, 6).map((topic) => (
                         <span

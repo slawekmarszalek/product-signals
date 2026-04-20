@@ -14,7 +14,7 @@ import { X } from "lucide-react"
 
 export interface RepoFilter {
   id: string
-  field: "company_name" | "repo_name" | "language" | "topics" | "stars"
+  field: "company_name" | "repo_name" | "language" | "category" | "topics" | "stars"
   operator: "contains" | "equals" | ">" | "<" | "="
   value: string
 }
@@ -27,7 +27,7 @@ const FIELD_OPTIONS = [
   { label: "Company", value: "company_name" },
   { label: "Repo", value: "repo_name" },
   { label: "Language", value: "language" },
-  { label: "Categories", value: "topics" },
+  { label: "Category", value: "category" },
   { label: "Stars", value: "stars" },
 ]
 
@@ -44,6 +44,7 @@ const OPERATOR_OPTIONS = {
     { label: "contains", value: "contains" },
     { label: "equals", value: "equals" },
   ],
+  category: [{ label: "contains", value: "contains" }],
   topics: [{ label: "contains", value: "contains" }],
   stars: [
     { label: ">", value: ">" },
