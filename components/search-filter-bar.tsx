@@ -10,6 +10,7 @@ interface SearchFilterBarProps {
   onFiltersChange: (filters: RepoFilter[]) => void
   filtersVisible: boolean
   onFiltersToggle: (visible: boolean) => void
+  availableCategories?: string[]
 }
 
 export function SearchFilterBar({
@@ -17,6 +18,7 @@ export function SearchFilterBar({
   onFiltersChange,
   filtersVisible,
   onFiltersToggle,
+  availableCategories,
 }: SearchFilterBarProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -42,7 +44,7 @@ export function SearchFilterBar({
         />
       </div>
 
-      {filtersVisible && <RepoFilters onFiltersChange={onFiltersChange} />}
+      {filtersVisible && <RepoFilters onFiltersChange={onFiltersChange} availableCategories={availableCategories} />}
     </div>
   )
 }

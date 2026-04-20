@@ -5,6 +5,7 @@ import { GithubReposTable } from "@/components/github-repos-table"
 import { RepoInsights } from "@/components/repo-insights"
 import { SearchFilterBar } from "@/components/search-filter-bar"
 import { RepoFilters, type RepoFilter } from "@/components/repo-filters"
+import { EmptyState } from "@/components/empty-state"
 
 interface GithubRepo {
   id: number
@@ -26,6 +27,17 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [filters, setFilters] = useState<RepoFilter[]>([])
   const [filtersVisible, setFiltersVisible] = useState(false)
+
+  // Get unique categories from repos
+  const availableCategories = useMemo(() => {
+    const categories = new Set<string>()
+    repos.forEach((repo) => {
+      if (repo.category) {
+        categories.add(repo.category)
+      }
+    })
+    return Array.from(categories).sort()
+  }, [repos])
 
   // Calculate global top 3 trending repos from the FULL unfiltered dataset
   // This is independent from search, filters, and sorting
@@ -52,11 +64,23 @@ export default function Home() {
     // Apply dynamic filters (AND logic)
     if (filters.length > 0) {
       // Filter out empty filters first
-      const activeFilters = filters.filter((f) => f.value.trim() !== "")
+      const activeFilters = filters.filter((f) => {
+        if (f.field === "category") {
+          return (f.selectedCategories || []).length > 0
+        }
+        return f.value.trim() !== ""
+      })
 
       if (activeFilters.length > 0) {
         results = results.filter((repo) => {
           return activeFilters.every((filter) => {
+            // Handle multi-select categories
+            if (filter.field === "category") {
+              const selectedCategories = filter.selectedCategories || []
+              const repoCategory = repo.category
+              return selectedCategories.length === 0 || (repoCategory && selectedCategories.includes(repoCategory))
+            }
+
             const fieldValue = repo[filter.field as keyof GithubRepo]
 
             if (filter.field === "stars") {
@@ -74,12 +98,6 @@ export default function Home() {
                 default:
                   return false
               }
-            }
-
-            if (filter.field === "category") {
-              const category = fieldValue as string | null
-              if (!category) return false
-              return category.toLowerCase().includes(filter.value.trim().toLowerCase())
             }
 
             if (filter.field === "topics") {
@@ -110,6 +128,11 @@ export default function Home() {
     return results
   }, [repos, searchQuery, filters])
 
+  const clearFilters = () => {
+    setSearchQuery("")
+    setFilters([])
+  }
+
   return (
     <div className="font-sans">
       <div className="mx-auto w-full max-w-6xl px-6 py-12">
@@ -130,6 +153,7 @@ export default function Home() {
             onFiltersChange={setFilters}
             filtersVisible={filtersVisible}
             onFiltersToggle={setFiltersVisible}
+            availableCategories={availableCategories}
           />
 
           <div className="flex flex-col gap-3">
@@ -141,14 +165,22 @@ export default function Home() {
                 🚀 Top 3 trending tools (24h)
               </p>
             </div>
-            <div className="rounded-lg border border-muted bg-muted/30">
-              <GithubReposTable 
-                onDataLoaded={setRepos} 
-                repos={filteredRepos} 
-                searchQuery={searchQuery}
-                globalTopTrendingIds={globalTopTrendingIds}
+            
+            {filteredRepos.length === 0 ? (
+              <EmptyState 
+                onClearFilters={clearFilters}
+                hasFilters={searchQuery.trim() !== "" || filters.length > 0}
               />
-            </div>
+            ) : (
+              <div className="rounded-lg border border-muted bg-muted/30">
+                <GithubReposTable 
+                  onDataLoaded={setRepos} 
+                  repos={filteredRepos} 
+                  searchQuery={searchQuery}
+                  globalTopTrendingIds={globalTopTrendingIds}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

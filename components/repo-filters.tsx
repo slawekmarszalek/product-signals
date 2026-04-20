@@ -17,10 +17,12 @@ export interface RepoFilter {
   field: "company_name" | "repo_name" | "language" | "category" | "topics" | "stars"
   operator: "contains" | "equals" | ">" | "<" | "="
   value: string
+  selectedCategories?: string[]
 }
 
 interface RepoFiltersProps {
   onFiltersChange: (filters: RepoFilter[]) => void
+  availableCategories?: string[]
 }
 
 const FIELD_OPTIONS = [
@@ -44,7 +46,7 @@ const OPERATOR_OPTIONS = {
     { label: "contains", value: "contains" },
     { label: "equals", value: "equals" },
   ],
-  category: [{ label: "contains", value: "contains" }],
+  category: [{ label: "is", value: "contains" }],
   topics: [{ label: "contains", value: "contains" }],
   stars: [
     { label: ">", value: ">" },
@@ -53,7 +55,7 @@ const OPERATOR_OPTIONS = {
   ],
 }
 
-export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
+export function RepoFilters({ onFiltersChange, availableCategories = [] }: RepoFiltersProps) {
   const [filters, setFilters] = useState<RepoFilter[]>([])
 
   const addFilter = () => {
@@ -62,6 +64,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
       field: "company_name",
       operator: "contains",
       value: "",
+      selectedCategories: [],
     }
     const updatedFilters = [...filters, newFilter]
     setFilters(updatedFilters)
@@ -82,6 +85,24 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
     const updatedFilters = filters.map((f) =>
       f.id === id ? { ...f, [field]: value } : f
     )
+    setFilters(updatedFilters)
+    onFiltersChange(updatedFilters)
+  }
+
+  const toggleCategory = (filterId: string, category: string) => {
+    const updatedFilters = filters.map((f) => {
+      if (f.id === filterId) {
+        const currentSelected = f.selectedCategories || []
+        const isSelected = currentSelected.includes(category)
+        return {
+          ...f,
+          selectedCategories: isSelected
+            ? currentSelected.filter((c) => c !== category)
+            : [...currentSelected, category],
+        }
+      }
+      return f
+    })
     setFilters(updatedFilters)
     onFiltersChange(updatedFilters)
   }
@@ -121,6 +142,7 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                         ...f,
                         field: newField,
                         operator: getOperatorsForField(newField)[0].value,
+                        selectedCategories: newField === "category" ? [] : f.selectedCategories,
                       }
                     : f
                 )
@@ -139,32 +161,54 @@ export function RepoFilters({ onFiltersChange }: RepoFiltersProps) {
                 </SelectContent>
               </Select>
 
-              <Select
-                value={filter.operator}
-                onValueChange={(value) =>
-                  updateFilter(filter.id, "operator", value)
-                }
-              >
-                <SelectTrigger className="w-full md:w-28 h-9 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {getOperatorsForField(filter.field).map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {filter.field === "category" ? (
+                <div className="flex flex-col gap-2 md:flex-1">
+                  <div className="flex flex-wrap gap-2">
+                    {availableCategories.map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => toggleCategory(filter.id, category)}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          (filter.selectedCategories || []).includes(category)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Select
+                    value={filter.operator}
+                    onValueChange={(value) =>
+                      updateFilter(filter.id, "operator", value)
+                    }
+                  >
+                    <SelectTrigger className="w-full md:w-28 h-9 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getOperatorsForField(filter.field).map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-              <Input
-                placeholder="Value"
-                value={filter.value}
-                onChange={(e) =>
-                  updateFilter(filter.id, "value", e.target.value)
-                }
-                className="w-full md:flex-1 h-9 text-base md:text-xs"
-              />
+                  <Input
+                    placeholder="Value"
+                    value={filter.value}
+                    onChange={(e) =>
+                      updateFilter(filter.id, "value", e.target.value)
+                    }
+                    className="w-full md:flex-1 h-9 text-base md:text-xs"
+                  />
+                </>
+              )}
 
               <Button
                 onClick={() => removeFilter(filter.id)}
