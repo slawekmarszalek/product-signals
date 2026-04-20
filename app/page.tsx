@@ -131,6 +131,7 @@ export default function Home() {
   const clearFilters = () => {
     setSearchQuery("")
     setFilters([])
+    setFiltersVisible(false)
   }
 
   return (
@@ -154,6 +155,7 @@ export default function Home() {
             filtersVisible={filtersVisible}
             onFiltersToggle={setFiltersVisible}
             availableCategories={availableCategories}
+            searchQuery={searchQuery}
           />
 
           <div className="flex flex-col gap-3">
